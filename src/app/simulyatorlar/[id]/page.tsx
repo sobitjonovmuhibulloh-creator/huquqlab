@@ -27,15 +27,15 @@ export default async function SimulatorPage({ params }: { params: Promise<{ id: 
     <div className="relative">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-brand-500/10 to-transparent" />
       <div className="relative mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-        <Link href="/simulyatorlar" className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-brand-600 dark:text-slate-400">
+        <Link href="/simulyatorlar" className="inline-flex items-center gap-1.5 text-sm font-medium text-navy-500 hover:text-brand-600 dark:text-navy-400">
           <ArrowLeft className="h-4 w-4" /> Simulyatorlar
         </Link>
         <div className="mt-5 mb-8 animate-fade-up">
           <div className="flex items-center gap-3">
             <span className="text-4xl">{scenario.emoji}</span>
-            <h1 className="text-3xl font-extrabold text-slate-900 sm:text-4xl dark:text-white">{scenario.title}</h1>
+            <h1 className="text-3xl font-extrabold text-navy-900 sm:text-4xl dark:text-white">{scenario.title}</h1>
           </div>
-          <p className="mt-3 text-slate-600 dark:text-slate-300">{scenario.description}</p>
+          <p className="mt-3 text-navy-600 dark:text-navy-300">{scenario.description}</p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Pill>
               <Clock className="h-3 w-3" /> ~{scenario.durationMinutes} daqiqa

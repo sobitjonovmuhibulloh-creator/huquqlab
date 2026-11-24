@@ -1,4 +1,5 @@
 import { XP_RULES } from "@/data/gamification";
+import { getStreak, weeklyClaimCount } from "./gamification";
 import type { ActivityEntry, Scenario, UserProgress } from "@/types";
 
 export const emptyProgress = (): UserProgress => ({
@@ -19,6 +20,7 @@ export function sanitizeProgress(raw: unknown): UserProgress {
   const p = raw as Partial<UserProgress>;
   return {
     version: 1,
+    name: typeof p.name === "string" ? p.name.slice(0, 40) : undefined,
     xp: typeof p.xp === "number" && p.xp >= 0 ? p.xp : 0,
     completedTopics: Array.isArray(p.completedTopics) ? p.completedTopics.filter((x) => typeof x === "string") : [],
     quizResults: p.quizResults && typeof p.quizResults === "object" ? p.quizResults : {},
@@ -116,7 +118,8 @@ export function evaluateBadges(p: UserProgress, scenarios: Scenario[]): { next: 
   check("mukammal-natija", quizzes.some((q) => q.total > 0 && q.best === q.total));
   check("test-ustasi", quizzes.filter((q) => q.total > 0 && q.best / q.total >= 0.8).length >= 5);
   check("huquq-ustasi", p.xp >= 500);
-  check("haftalik-chempion", p.claimedChallenges.length >= 1);
+  check("haftalik-chempion", weeklyClaimCount(p) >= 1);
+  check("izchil-oquvchi", getStreak(p).best >= 3);
   check("simulyator-ustasi", scenarios.length > 0 && scenarios.every((s) => p.simulatorResults[s.id]));
 
   for (const s of scenarios) {

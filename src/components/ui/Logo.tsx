@@ -5,8 +5,8 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
     <svg viewBox="0 0 40 40" className={className} aria-hidden>
       <defs>
         <linearGradient id="hl-g" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6366F1" />
-          <stop offset="1" stopColor="#8B5CF6" />
+          <stop stopColor="#111C30" />
+          <stop offset="1" stopColor="#0F6A82" />
         </linearGradient>
       </defs>
       <rect width="40" height="40" rx="12" fill="url(#hl-g)" />
@@ -21,8 +21,8 @@ export function Logo() {
   return (
     <Link href="/" className="group flex items-center gap-2.5" aria-label="HuquqLab bosh sahifa">
       <LogoMark className="h-9 w-9 transition-transform duration-300 group-hover:rotate-[-6deg] group-hover:scale-105" />
-      <span className="font-display text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-        Huquq<span className="text-brand-600 dark:text-brand-400">Lab</span>
+      <span className="font-display text-xl font-extrabold tracking-tight text-navy-900 dark:text-white">
+        Huquq<span className="text-brand-700 dark:text-brand-400">Lab</span>
       </span>
     </Link>
   );

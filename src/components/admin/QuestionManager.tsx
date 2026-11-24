@@ -102,7 +102,7 @@ export function QuestionManager() {
       {editing && (
         <div className="card p-5 animate-fade-up sm:p-6">
           <div className="flex items-center justify-between">
-            <h3 className="font-extrabold text-slate-900 dark:text-white">{isNew ? "Yangi savol" : "Savolni tahrirlash"}</h3>
+            <h3 className="font-extrabold text-navy-900 dark:text-white">{isNew ? "Yangi savol" : "Savolni tahrirlash"}</h3>
             <Button variant="ghost" size="sm" onClick={() => setEditing(null)} aria-label="Yopish">
               <X className="h-4 w-4" />
             </Button>
@@ -120,7 +120,7 @@ export function QuestionManager() {
                   onClick={() => setEditing({ ...editing, correctIndex: i as QuizQuestion["correctIndex"] })}
                   className={cn(
                     "grid h-10 w-10 shrink-0 place-items-center rounded-xl text-sm font-bold transition",
-                    editing.correctIndex === i ? "bg-emerald-500 text-white" : "bg-slate-100 text-slate-600 dark:bg-white/10 dark:text-slate-300",
+                    editing.correctIndex === i ? "bg-emerald-500 text-white" : "bg-navy-100 text-navy-600 dark:bg-white/10 dark:text-navy-300",
                   )}
                   aria-label={`${letters[i]} variantini to‘g‘ri javob qilish`}
                   aria-pressed={editing.correctIndex === i}
@@ -163,8 +163,8 @@ export function QuestionManager() {
           {topic?.quiz.map((q, i) => (
             <li key={q.id} className="card p-5">
               <div className="flex items-start justify-between gap-3">
-                <p className="font-semibold text-slate-900 dark:text-white">
-                  <span className="text-slate-400">{i + 1}.</span> {q.question}
+                <p className="font-semibold text-navy-900 dark:text-white">
+                  <span className="text-navy-400">{i + 1}.</span> {q.question}
                 </p>
                 <div className="flex shrink-0 gap-1">
                   <Button
@@ -192,7 +192,7 @@ export function QuestionManager() {
                       "rounded-xl px-3 py-2 text-sm",
                       oi === q.correctIndex
                         ? "bg-emerald-50 font-semibold text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-200"
-                        : "bg-slate-50 text-slate-600 dark:bg-white/[0.03] dark:text-slate-400",
+                        : "bg-navy-50 text-navy-600 dark:bg-white/[0.03] dark:text-navy-400",
                     )}
                   >
                     {letters[oi]}. {o}

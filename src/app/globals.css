@@ -6,16 +6,31 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-manrope), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-300: #a5b4fc;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
+  /* Accent: turquoise/blue. Matn uchun 700+ (WCAG AA), fon uchun 50–200 */
+  --color-brand-50: #ecfeff;
+  --color-brand-100: #cff7fb;
+  --color-brand-200: #a2ecf5;
+  --color-brand-300: #63dbeb;
+  --color-brand-400: #26c3d9;
+  --color-brand-500: #0ea5bd;
+  --color-brand-600: #0b84a0;
+  --color-brand-700: #0f6a82;
+  --color-brand-800: #13566a;
+  --color-brand-900: #14475a;
+  --color-brand-950: #082f3b;
+
+  /* Asosiy neytral: dark navy */
+  --color-navy-50: #f4f6fa;
+  --color-navy-100: #e6ebf3;
+  --color-navy-200: #cdd6e4;
+  --color-navy-300: #a3b2ca;
+  --color-navy-400: #7086a8;
+  --color-navy-500: #4c6287;
+  --color-navy-600: #384c6e;
+  --color-navy-700: #2a3a57;
+  --color-navy-800: #1b2840;
+  --color-navy-900: #111c30;
+  --color-navy-950: #0a1222;
 
   --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-fade-in: fade-in 0.4s ease-out both;
@@ -52,14 +67,14 @@
 }
 
 :root {
-  --bg: #f7f8fc;
-  --fg: #0f172a;
+  --bg: #f5f7fa;
+  --fg: #111c30;
   color-scheme: light;
 }
 
 .dark {
-  --bg: #0a0e1a;
-  --fg: #e2e8f0;
+  --bg: #0a1222;
+  --fg: #e6ebf3;
   color-scheme: dark;
 }
 
@@ -82,7 +97,7 @@ h1, h2, h3, h4 {
 }
 
 ::selection {
-  background: rgb(99 102 241 / 0.25);
+  background: rgb(14 165 189 / 0.25);
 }
 
 @layer components {
@@ -91,11 +106,11 @@ h1, h2, h3, h4 {
   }
 
   .card {
-    @apply rounded-3xl border border-slate-200/80 bg-white shadow-sm shadow-slate-900/[0.03] dark:border-white/[0.08] dark:bg-slate-900/60 dark:shadow-none;
+    @apply rounded-2xl border border-navy-100 bg-white shadow-[0_1px_2px_rgb(17_28_48/0.04),0_8px_24px_-12px_rgb(17_28_48/0.08)] dark:border-white/[0.07] dark:bg-navy-900/70 dark:shadow-none;
   }
 
   .input {
-    @apply w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 dark:border-white/10 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500;
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 dark:border-white/10 dark:bg-navy-900 dark:text-navy-50 dark:placeholder:text-navy-400;
   }
 
   .label {
@@ -103,15 +118,35 @@ h1, h2, h3, h4 {
   }
 
   .eyebrow {
-    @apply inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold tracking-wide text-brand-700 uppercase dark:border-brand-400/20 dark:bg-brand-400/10 dark:text-brand-300;
+    @apply inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold tracking-wide text-brand-800 uppercase dark:border-brand-400/20 dark:bg-brand-400/10 dark:text-brand-300;
+  }
+
+  /* Yagona heading shkalasi */
+  .h-section {
+    @apply text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl dark:text-white;
+  }
+
+  .text-muted {
+    @apply text-navy-500 dark:text-navy-300;
+  }
+
+  .surface-navy {
+    @apply bg-navy-900 text-white dark:bg-navy-900/80;
+    background-image: radial-gradient(ellipse at top right, rgb(14 165 189 / 0.28), transparent 55%), radial-gradient(ellipse at bottom left, rgb(38 195 217 / 0.12), transparent 50%);
   }
 
   .bg-grid {
     background-image:
-      linear-gradient(to right, rgb(99 102 241 / 0.07) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(99 102 241 / 0.07) 1px, transparent 1px);
+      linear-gradient(to right, rgb(17 28 48 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(17 28 48 / 0.05) 1px, transparent 1px);
     background-size: 44px 44px;
   }
+}
+
+/* Klaviatura foydalanuvchilari uchun aniq fokus */
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

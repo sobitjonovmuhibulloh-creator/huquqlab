@@ -64,7 +64,7 @@ export function AdminPanel() {
                 "flex shrink-0 items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold transition",
                 tab === t.id
                   ? "bg-brand-600 text-white shadow-md shadow-brand-600/20 dark:bg-brand-500"
-                  : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5",
+                  : "text-navy-600 hover:bg-navy-100 dark:text-navy-300 dark:hover:bg-white/5",
               )}
             >
               <t.icon className="h-4 w-4" /> {t.label}
@@ -109,7 +109,7 @@ function TopicManager() {
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
-          <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-navy-400" />
           <input className="input pl-10" placeholder="Mavzu qidirish..." value={query} onChange={(e) => setQuery(e.target.value)} />
         </div>
         <Button onClick={() => setEditing("new")}>
@@ -118,17 +118,17 @@ function TopicManager() {
       </div>
 
       {!ready ? (
-        <p className="text-sm text-slate-500">Yuklanmoqda...</p>
+        <p className="text-sm text-navy-500">Yuklanmoqda...</p>
       ) : filtered.length === 0 ? (
         <EmptyState title="Mavzu topilmadi" action={<Button onClick={() => setEditing("new")}>Yangi mavzu</Button>} />
       ) : (
-        <div className="card divide-y divide-slate-100 overflow-hidden dark:divide-white/[0.06]">
+        <div className="card divide-y divide-navy-100 overflow-hidden dark:divide-white/[0.06]">
           {filtered.map((t) => (
             <div key={t.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
               <div className="flex min-w-0 flex-1 items-center gap-3">
                 <CategoryIcon categoryId={t.categoryId} size="sm" />
                 <div className="min-w-0">
-                  <p className="truncate font-semibold text-slate-900 dark:text-white">{t.title}</p>
+                  <p className="truncate font-semibold text-navy-900 dark:text-white">{t.title}</p>
                   <div className="mt-1 flex flex-wrap gap-1.5">
                     <Pill>{categoryById[t.categoryId]?.name}</Pill>
                     <Pill>{t.grades.join(", ")}-sinf</Pill>
@@ -171,8 +171,8 @@ function SimulatorList() {
               <div className="flex items-center gap-3">
                 <span className="text-3xl">{s.emoji}</span>
                 <div>
-                  <p className="font-bold text-slate-900 dark:text-white">{s.title}</p>
-                  <p className="font-mono text-xs text-slate-500">{s.id}</p>
+                  <p className="font-bold text-navy-900 dark:text-white">{s.title}</p>
+                  <p className="font-mono text-xs text-navy-500">{s.id}</p>
                 </div>
               </div>
               <dl className="mt-4 grid grid-cols-3 gap-2 text-center">
@@ -181,9 +181,9 @@ function SimulatorList() {
                   ["Yakun", countEndings(s)],
                   ["Maks. ball", getMaxScore(s)],
                 ].map(([k, v]) => (
-                  <div key={k} className="rounded-xl bg-slate-50 p-2 dark:bg-white/[0.03]">
-                    <dd className="text-lg font-extrabold text-slate-900 dark:text-white">{v}</dd>
-                    <dt className="text-[11px] text-slate-500">{k}</dt>
+                  <div key={k} className="rounded-xl bg-navy-50 p-2 dark:bg-white/[0.03]">
+                    <dd className="text-lg font-extrabold text-navy-900 dark:text-white">{v}</dd>
+                    <dt className="text-[11px] text-navy-500">{k}</dt>
                   </div>
                 ))}
               </dl>
@@ -210,13 +210,13 @@ function SimulatorList() {
           );
         })}
       </div>
-      <div className="card p-5 text-sm text-slate-600 dark:text-slate-400">
-        <p className="font-bold text-slate-900 dark:text-white">Yangi simulyator qo‘shish</p>
+      <div className="card p-5 text-sm text-navy-600 dark:text-navy-400">
+        <p className="font-bold text-navy-900 dark:text-white">Yangi simulyator qo‘shish</p>
         <p className="mt-1">
-          Simulyatorlar qadamlar grafi sifatida tuzilgan. Yangi ssenariy qo‘shish uchun <code className="rounded bg-slate-100 px-1.5 py-0.5 dark:bg-white/10">src/data/simulators.ts</code>{" "}
+          Simulyatorlar qadamlar grafi sifatida tuzilgan. Yangi ssenariy qo‘shish uchun <code className="rounded bg-navy-100 px-1.5 py-0.5 dark:bg-white/10">src/data/simulators.ts</code>{" "}
           fayliga yangi obyekt qo‘shing — player komponenti avtomatik ishlaydi, bu sahifa esa grafni tekshirib beradi.
         </p>
-        <pre className="mt-3 overflow-x-auto rounded-xl bg-slate-900 p-4 text-xs text-slate-100">{`{
+        <pre className="mt-3 overflow-x-auto rounded-xl bg-navy-900 p-4 text-xs text-navy-100">{`{
   id: "yangi-ssenariy", title: "...", startStepId: "start",
   steps: {
     start: { id: "start", title: "...", narrative: "...",
@@ -280,8 +280,8 @@ function ContentTools() {
           ["Sinflar", "7–11"],
         ].map(([k, v]) => (
           <div key={k} className="card p-5">
-            <p className="font-display text-3xl font-extrabold text-slate-900 dark:text-white">{v}</p>
-            <p className="text-sm text-slate-500">{k}</p>
+            <p className="font-display text-3xl font-extrabold text-navy-900 dark:text-white">{v}</p>
+            <p className="text-sm text-navy-500">{k}</p>
           </div>
         ))}
       </div>
@@ -289,16 +289,16 @@ function ContentTools() {
       <div className="grid gap-4 md:grid-cols-3">
         <div className="card p-5">
           <Download className="h-6 w-6 text-brand-600" />
-          <p className="mt-3 font-bold text-slate-900 dark:text-white">Eksport (JSON)</p>
-          <p className="mt-1 text-sm text-slate-500">Barcha mavzu va savollarni faylga yuklab olish — zaxira yoki boshqa qurilmaga ko‘chirish uchun.</p>
+          <p className="mt-3 font-bold text-navy-900 dark:text-white">Eksport (JSON)</p>
+          <p className="mt-1 text-sm text-navy-500">Barcha mavzu va savollarni faylga yuklab olish — zaxira yoki boshqa qurilmaga ko‘chirish uchun.</p>
           <Button variant="secondary" className="mt-4 w-full" onClick={exportJson}>
             Yuklab olish
           </Button>
         </div>
         <div className="card p-5">
           <Upload className="h-6 w-6 text-emerald-600" />
-          <p className="mt-3 font-bold text-slate-900 dark:text-white">Import (JSON)</p>
-          <p className="mt-1 text-sm text-slate-500">Eksport qilingan faylni yuklash. Joriy kontent almashtiriladi.</p>
+          <p className="mt-3 font-bold text-navy-900 dark:text-white">Import (JSON)</p>
+          <p className="mt-1 text-sm text-navy-500">Eksport qilingan faylni yuklash. Joriy kontent almashtiriladi.</p>
           <input ref={fileRef} type="file" accept="application/json,.json" className="hidden" onChange={(e) => e.target.files?.[0] && importJson(e.target.files[0])} />
           <Button variant="secondary" className="mt-4 w-full" onClick={() => fileRef.current?.click()}>
             Fayl tanlash
@@ -306,8 +306,8 @@ function ContentTools() {
         </div>
         <div className="card p-5">
           <RotateCcw className="h-6 w-6 text-rose-600" />
-          <p className="mt-3 font-bold text-slate-900 dark:text-white">Demo kontentni tiklash</p>
-          <p className="mt-1 text-sm text-slate-500">Barcha o‘zgarishlarni bekor qilib, boshlang‘ich demo mavzularni qaytarish.</p>
+          <p className="mt-3 font-bold text-navy-900 dark:text-white">Demo kontentni tiklash</p>
+          <p className="mt-1 text-sm text-navy-500">Barcha o‘zgarishlarni bekor qilib, boshlang‘ich demo mavzularni qaytarish.</p>
           {confirmReset ? (
             <div className="mt-4 flex gap-2">
               <Button
@@ -332,7 +332,7 @@ function ContentTools() {
           )}
         </div>
       </div>
-      <p className="text-center text-xs text-slate-500">
+      <p className="text-center text-xs text-navy-500">
         Ma’lumotlar bazasi sxemasi: <code>prisma/schema.prisma</code> · Arxitektura: <Link href="/haqida" className="underline">Loyiha haqida</Link>
       </p>
     </div>

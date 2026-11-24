@@ -22,21 +22,21 @@ const groups = [
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-slate-200/70 bg-white/60 dark:border-white/[0.06] dark:bg-white/[0.02]">
+    <footer className="mt-24 border-t border-navy-200/70 bg-white/60 dark:border-white/[0.06] dark:bg-white/[0.02]">
       <div className="container-page grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1.4fr]">
         <div>
           <Logo />
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-navy-500 dark:text-navy-400">
             O‘zbekiston maktab o‘quvchilari uchun huquqiy bilimlarni interaktiv tarzda o‘rgatuvchi platforma.
           </p>
         </div>
         {groups.map((g) => (
           <div key={g.title}>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">{g.title}</h3>
+            <h3 className="text-sm font-bold text-navy-900 dark:text-white">{g.title}</h3>
             <ul className="mt-4 space-y-2.5">
               {g.links.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-sm text-slate-500 transition hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-300">
+                  <Link href={l.href} className="text-sm text-navy-500 transition hover:text-brand-600 dark:text-navy-400 dark:hover:text-brand-300">
                     {l.label}
                   </Link>
                 </li>
@@ -55,8 +55,8 @@ export function Footer() {
           </p>
         </div>
       </div>
-      <div className="border-t border-slate-200/70 dark:border-white/[0.06]">
-        <div className="container-page flex flex-col items-center justify-between gap-2 py-5 text-xs text-slate-500 sm:flex-row dark:text-slate-500">
+      <div className="border-t border-navy-200/70 dark:border-white/[0.06]">
+        <div className="container-page flex flex-col items-center justify-between gap-2 py-5 text-xs text-navy-500 sm:flex-row dark:text-navy-500">
           <p>© {new Date().getFullYear()} HuquqLab. Ta’limiy demo loyiha.</p>
           <p>Favqulodda: 101 · 102 · 103</p>
         </div>

@@ -22,10 +22,10 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 
 const toneStyles: Record<ToastTone, string> = {
   xp: "border-amber-300/60 bg-amber-50 text-amber-950 dark:border-amber-400/30 dark:bg-amber-950/80 dark:text-amber-50",
-  badge: "border-violet-300/60 bg-violet-50 text-violet-950 dark:border-violet-400/30 dark:bg-violet-950/80 dark:text-violet-50",
+  badge: "border-brand-300/60 bg-brand-50 text-brand-950 dark:border-brand-400/30 dark:bg-brand-950/80 dark:text-brand-50",
   success: "border-emerald-300/60 bg-emerald-50 text-emerald-950 dark:border-emerald-400/30 dark:bg-emerald-950/80 dark:text-emerald-50",
   error: "border-rose-300/60 bg-rose-50 text-rose-950 dark:border-rose-400/30 dark:bg-rose-950/80 dark:text-rose-50",
-  info: "border-slate-200 bg-white text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50",
+  info: "border-navy-200 bg-white text-navy-900 dark:border-navy-700 dark:bg-navy-900 dark:text-navy-50",
 };
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -55,7 +55,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={t.id}
             role="status"
             className={cn(
-              "animate-toast-in pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border p-4 shadow-xl shadow-slate-900/10 backdrop-blur",
+              "animate-toast-in pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border p-4 shadow-xl shadow-navy-900/10 backdrop-blur",
               toneStyles[t.tone],
             )}
           >

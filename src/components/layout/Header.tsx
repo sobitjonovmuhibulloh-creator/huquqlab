@@ -49,7 +49,7 @@ export function Header() {
       className={cn(
         "sticky top-0 z-50 border-b transition-all duration-300",
         scrolled || open
-          ? "border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#0a0e1a]/80"
+          ? "border-navy-200/70 bg-white/80 backdrop-blur-xl dark:border-white/[0.06] dark:bg-navy-950/80"
           : "border-transparent bg-transparent",
       )}
     >
@@ -65,7 +65,7 @@ export function Header() {
                 "relative rounded-xl px-3.5 py-2 text-sm font-medium transition-colors",
                 isActive(item.href)
                   ? "text-brand-700 dark:text-white"
-                  : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white",
+                  : "text-navy-600 hover:text-navy-900 dark:text-navy-400 dark:hover:text-white",
               )}
             >
               {item.label}
@@ -88,14 +88,14 @@ export function Header() {
           </Link>
           <button
             onClick={toggleTheme}
-            className="grid h-10 w-10 place-items-center rounded-xl text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10"
+            className="grid h-10 w-10 place-items-center rounded-xl text-navy-600 transition hover:bg-navy-100 dark:text-navy-300 dark:hover:bg-white/10"
             aria-label={theme === "dark" ? "Yorug‘ rejim" : "Qorong‘i rejim"}
           >
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
           <button
             onClick={() => setOpen((o) => !o)}
-            className="grid h-10 w-10 place-items-center rounded-xl text-slate-700 transition hover:bg-slate-100 lg:hidden dark:text-slate-200 dark:hover:bg-white/10"
+            className="grid h-10 w-10 place-items-center rounded-xl text-navy-700 transition hover:bg-navy-100 lg:hidden dark:text-navy-200 dark:hover:bg-white/10"
             aria-label="Menyu"
             aria-expanded={open}
           >
@@ -105,9 +105,9 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="h-[calc(100dvh-4rem)] overflow-y-auto border-t border-slate-200/70 bg-white/95 backdrop-blur-xl lg:hidden dark:border-white/[0.06] dark:bg-[#0a0e1a]/95">
+        <div className="h-[calc(100dvh-4rem)] overflow-y-auto border-t border-navy-200/70 bg-white/95 backdrop-blur-xl lg:hidden dark:border-white/[0.06] dark:bg-navy-950/95">
           <nav className="container-page flex flex-col gap-1 py-4" aria-label="Mobil navigatsiya">
-            <Link href="/" className={cn("rounded-2xl px-4 py-3.5 text-base font-semibold", pathname === "/" ? "bg-brand-50 text-brand-700 dark:bg-brand-400/10 dark:text-brand-300" : "text-slate-700 dark:text-slate-200")}>
+            <Link href="/" className={cn("rounded-2xl px-4 py-3.5 text-base font-semibold", pathname === "/" ? "bg-brand-50 text-brand-700 dark:bg-brand-400/10 dark:text-brand-300" : "text-navy-700 dark:text-navy-200")}>
               Bosh sahifa
             </Link>
             {navItems.map((item, i) => (
@@ -119,7 +119,7 @@ export function Header() {
                   "animate-fade-up rounded-2xl px-4 py-3.5 text-base font-semibold",
                   isActive(item.href)
                     ? "bg-brand-50 text-brand-700 dark:bg-brand-400/10 dark:text-brand-300"
-                    : "text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-white/5",
+                    : "text-navy-700 hover:bg-navy-50 dark:text-navy-200 dark:hover:bg-white/5",
                 )}
               >
                 {item.label}

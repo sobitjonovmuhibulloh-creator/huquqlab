@@ -131,7 +131,7 @@ export function TopicEditor({ topic, onClose }: { topic?: Topic; onClose: () => 
   return (
     <form onSubmit={submit} className="card animate-fade-up p-5 sm:p-7" noValidate>
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">{topic ? "Mavzuni tahrirlash" : "Yangi mavzu"}</h3>
+        <h3 className="text-xl font-extrabold text-navy-900 dark:text-white">{topic ? "Mavzuni tahrirlash" : "Yangi mavzu"}</h3>
         <Button type="button" variant="ghost" size="sm" onClick={onClose} aria-label="Yopish">
           <X className="h-4 w-4" />
         </Button>
@@ -175,7 +175,7 @@ export function TopicEditor({ topic, onClose }: { topic?: Topic; onClose: () => 
                   onClick={() => set("grades", on ? d.grades.filter((x) => x !== g) : [...d.grades, g])}
                   className={cn(
                     "h-10 w-14 rounded-xl border text-sm font-bold transition",
-                    on ? "border-brand-600 bg-brand-600 text-white" : "border-slate-200 text-slate-600 dark:border-white/10 dark:text-slate-300",
+                    on ? "border-brand-600 bg-brand-600 text-white" : "border-navy-200 text-navy-600 dark:border-white/10 dark:text-navy-300",
                   )}
                   aria-pressed={on}
                 >
@@ -207,7 +207,7 @@ export function TopicEditor({ topic, onClose }: { topic?: Topic; onClose: () => 
             ))}
           </select>
         </Field>
-        <label className="flex items-center gap-3 self-end rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 dark:border-white/10 dark:text-slate-300">
+        <label className="flex items-center gap-3 self-end rounded-xl border border-navy-200 px-4 py-2.5 text-sm font-medium text-navy-700 dark:border-white/10 dark:text-navy-300">
           <input type="checkbox" checked={d.popular} onChange={(e) => set("popular", e.target.checked)} className="h-4 w-4 accent-brand-600" />
           Bosh sahifada «Ommabop» sifatida ko‘rsatish
         </label>
@@ -237,13 +237,13 @@ export function TopicEditor({ topic, onClose }: { topic?: Topic; onClose: () => 
             </Button>
           </div>
           {errors.legalBasis && <p className="mt-1 text-xs font-medium text-rose-600">{errors.legalBasis}</p>}
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-navy-500">
             Rasmiy matn bilan solishtirilmagan modda va tafsilotlarni «Tekshirish talab etiladi» deb belgilang.
           </p>
           <div className="mt-3 space-y-3">
-            {d.legalBasis.length === 0 && <p className="rounded-xl border border-dashed border-slate-300 p-4 text-center text-sm text-slate-500 dark:border-white/15">Manba qo‘shilmagan</p>}
+            {d.legalBasis.length === 0 && <p className="rounded-xl border border-dashed border-navy-300 p-4 text-center text-sm text-navy-500 dark:border-white/15">Manba qo‘shilmagan</p>}
             {d.legalBasis.map((l, i) => (
-              <div key={l.id} className="grid gap-2 rounded-2xl border border-slate-200 p-3 sm:grid-cols-[1fr_160px_auto] dark:border-white/10">
+              <div key={l.id} className="grid gap-2 rounded-2xl border border-navy-200 p-3 sm:grid-cols-[1fr_160px_auto] dark:border-white/10">
                 <input className="input" placeholder="Hujjat nomi" value={l.document} onChange={(e) => updateLegal(i, { document: e.target.value })} />
                 <input className="input" placeholder="Modda (ixtiyoriy)" value={l.article ?? ""} onChange={(e) => updateLegal(i, { article: e.target.value || undefined })} />
                 <Button type="button" variant="ghost" size="sm" className="h-10" onClick={() => set("legalBasis", d.legalBasis.filter((_, idx) => idx !== i))} aria-label="Manbani o‘chirish">
@@ -276,7 +276,7 @@ export function TopicEditor({ topic, onClose }: { topic?: Topic; onClose: () => 
         </Field>
       </div>
 
-      <div className="mt-7 flex flex-col-reverse justify-end gap-2 border-t border-slate-200/70 pt-5 sm:flex-row dark:border-white/[0.06]">
+      <div className="mt-7 flex flex-col-reverse justify-end gap-2 border-t border-navy-200/70 pt-5 sm:flex-row dark:border-white/[0.06]">
         <Button type="button" variant="secondary" onClick={onClose}>
           Bekor qilish
         </Button>
@@ -305,7 +305,7 @@ function Field({
     <div className={className}>
       <span className="label">{label}</span>
       {children}
-      {error ? <p className="mt-1 text-xs font-medium text-rose-600">{error}</p> : hint && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
+      {error ? <p className="mt-1 text-xs font-medium text-rose-600">{error}</p> : hint && <p className="mt-1 text-xs text-navy-500">{hint}</p>}
     </div>
   );
 }

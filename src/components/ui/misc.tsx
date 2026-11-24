@@ -21,10 +21,10 @@ export function ProgressBar({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label={label}
-      className={cn("h-2.5 w-full overflow-hidden rounded-full bg-slate-200/80 dark:bg-white/10", className)}
+      className={cn("h-2.5 w-full overflow-hidden rounded-full bg-navy-200/80 dark:bg-white/10", className)}
     >
       <div
-        className={cn("h-full rounded-full bg-gradient-to-r from-brand-500 to-violet-500 transition-[width] duration-700 ease-out", barClassName)}
+        className={cn("h-full rounded-full bg-gradient-to-r from-brand-600 to-brand-400 transition-[width] duration-700 ease-out", barClassName)}
         style={{ width: `${pct}%` }}
       />
     </div>
@@ -44,18 +44,18 @@ export function EmptyState({
 }) {
   return (
     <div className="card flex flex-col items-center px-6 py-14 text-center animate-fade-in">
-      <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-slate-100 text-slate-500 dark:bg-white/5 dark:text-slate-400">
+      <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-navy-100 text-navy-500 dark:bg-white/5 dark:text-navy-400">
         {icon ?? <SearchX className="h-7 w-7" />}
       </div>
-      <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>
-      {description && <p className="mt-1 max-w-md text-sm text-slate-500 dark:text-slate-400">{description}</p>}
+      <h3 className="text-lg font-bold text-navy-900 dark:text-white">{title}</h3>
+      {description && <p className="mt-1 max-w-md text-sm text-navy-500 dark:text-navy-400">{description}</p>}
       {action && <div className="mt-5">{action}</div>}
     </div>
   );
 }
 
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn("animate-pulse rounded-xl bg-slate-200/80 dark:bg-white/10", className)} />;
+  return <div className={cn("animate-pulse rounded-xl bg-navy-200/80 dark:bg-white/10", className)} />;
 }
 
 export function LegalStatusBadge({ status }: { status: LegalStatus }) {
@@ -74,7 +74,7 @@ export function Pill({ children, className }: { children: React.ReactNode; class
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-white/[0.06] dark:text-slate-300",
+        "inline-flex items-center gap-1 rounded-full bg-navy-100 px-2.5 py-1 text-xs font-medium text-navy-600 dark:bg-white/[0.06] dark:text-navy-300",
         className,
       )}
     >

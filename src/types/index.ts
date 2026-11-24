@@ -180,6 +180,8 @@ export interface SimulatorResult {
 
 export interface UserProgress {
   version: 1;
+  /** Salomlashish uchun ixtiyoriy ism (faqat shu brauzerda) */
+  name?: string;
   xp: number;
   completedTopics: string[];
   quizResults: Record<string, QuizResult>;
@@ -198,4 +200,20 @@ export interface WeeklyChallenge {
   /** quiz uchun minimal foiz */
   minValue?: number;
   rewardXp: number;
+}
+
+/* ---------------- Kutubxona ---------------- */
+
+export interface Book {
+  id: string;
+  title: string;
+  grade: Grade;
+  language: "uz" | "ru";
+  /** Faqat manbada tasdiqlangan mualliflar; noma'lum bo'lsa bo'sh qoldiriladi */
+  authors?: string[];
+  /** Rasmiy portaldagi PDF manzili — fayl saytga ko'chirilmaydi */
+  url: string;
+  sizeMb?: number;
+  /** Manzil oxirgi marta tekshirilgan sana */
+  checkedAt: string;
 }

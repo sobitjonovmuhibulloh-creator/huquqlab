@@ -19,7 +19,7 @@ export function TopicCard({ topic, index = 0 }: { topic: Topic; index?: number }
     <article
       style={{ animationDelay: `${Math.min(index, 8) * 50}ms` }}
       className={cn(
-        "card group relative flex flex-col p-5 transition-all duration-300 animate-fade-up hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/[0.06] dark:hover:border-white/15",
+        "card group relative flex flex-col p-5 transition-all duration-300 animate-fade-up hover:-translate-y-1 hover:shadow-xl hover:shadow-navy-900/[0.06] dark:hover:border-white/15",
         completed && "ring-1 ring-emerald-500/30",
       )}
     >
@@ -31,7 +31,7 @@ export function TopicCard({ topic, index = 0 }: { topic: Topic; index?: number }
             "relative z-10 flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold transition",
             completed
               ? "border-emerald-500 bg-emerald-500 text-white hover:bg-emerald-600"
-              : "border-slate-200 text-slate-500 hover:border-emerald-400 hover:text-emerald-600 dark:border-white/10 dark:text-slate-400",
+              : "border-navy-200 text-navy-500 hover:border-emerald-400 hover:text-emerald-600 dark:border-white/10 dark:text-navy-400",
           )}
           aria-pressed={completed}
           title={completed ? "Belgini olib tashlash" : "O‘rganildi deb belgilash"}
@@ -41,13 +41,13 @@ export function TopicCard({ topic, index = 0 }: { topic: Topic; index?: number }
         </button>
       </div>
 
-      <p className="mt-4 text-xs font-semibold text-slate-500 dark:text-slate-400">{category?.name}</p>
-      <h3 className="mt-1 text-lg leading-snug font-bold text-slate-900 dark:text-white">
+      <p className="mt-4 text-xs font-semibold text-navy-500 dark:text-navy-400">{category?.name}</p>
+      <h3 className="mt-1 text-lg leading-snug font-bold text-navy-900 dark:text-white">
         <Link href={`/mavzular/${topic.slug}`} className="after:absolute after:inset-0 after:rounded-3xl focus:outline-none">
           {topic.title}
         </Link>
       </h3>
-      <p className="mt-2 line-clamp-2 flex-1 text-sm text-slate-600 dark:text-slate-400">{topic.shortDescription}</p>
+      <p className="mt-2 line-clamp-2 flex-1 text-sm text-navy-600 dark:text-navy-400">{topic.shortDescription}</p>
 
       <div className="mt-4 flex flex-wrap items-center gap-1.5">
         <Pill>{topic.grades.length > 1 ? `${topic.grades[0]}–${topic.grades[topic.grades.length - 1]}-sinf` : `${topic.grades[0]}-sinf`}</Pill>
@@ -56,7 +56,7 @@ export function TopicCard({ topic, index = 0 }: { topic: Topic; index?: number }
         </Pill>
         <Pill>{difficultyLabel[topic.difficulty]}</Pill>
         {topic.simulatorId && (
-          <Pill className="bg-violet-100 text-violet-700 dark:bg-violet-400/10 dark:text-violet-300">
+          <Pill className="bg-brand-100 text-brand-700 dark:bg-brand-400/10 dark:text-brand-300">
             <Gamepad2 className="h-3 w-3" /> Simulyator
           </Pill>
         )}

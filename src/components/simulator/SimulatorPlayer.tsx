@@ -132,8 +132,8 @@ export function SimulatorPlayer({ scenario }: { scenario: Scenario }) {
                 </span>
               ))}
             </div>
-            <h2 className="mt-4 text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">Simulyator yakunlandi</h2>
-            <p className="mx-auto mt-2 max-w-lg text-slate-600 dark:text-slate-300">{rating.title}</p>
+            <h2 className="mt-4 text-2xl font-extrabold text-navy-900 sm:text-3xl dark:text-white">Simulyator yakunlandi</h2>
+            <p className="mx-auto mt-2 max-w-lg text-navy-600 dark:text-navy-300">{rating.title}</p>
 
             <div className="mx-auto mt-8 grid max-w-xl grid-cols-3 gap-3">
               <Stat label="Ball" value={`${finalScore}/${maxScore}`} />
@@ -141,18 +141,18 @@ export function SimulatorPlayer({ scenario }: { scenario: Scenario }) {
               <Stat label="XP" value={finished.xp > 0 ? `+${finished.xp}` : "0"} highlight={finished.xp > 0} />
             </div>
             {finished.xp === 0 && (
-              <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-3 text-xs text-navy-500 dark:text-navy-400">
                 XP faqat eng yaxshi natijangizni yangilaganingizda beriladi.
               </p>
             )}
 
             {badge && (
-              <div className="mx-auto mt-6 flex max-w-md items-center gap-4 rounded-2xl border border-violet-200 bg-violet-50 p-4 text-left animate-pop dark:border-violet-400/20 dark:bg-violet-400/10">
+              <div className="mx-auto mt-6 flex max-w-md items-center gap-4 rounded-2xl border border-brand-200 bg-brand-50 p-4 text-left animate-pop dark:border-brand-400/20 dark:bg-brand-400/10">
                 <span className="text-4xl">{badge.emoji}</span>
                 <div>
-                  <p className="text-xs font-bold tracking-wide text-violet-600 uppercase dark:text-violet-300">Yangi nishon!</p>
-                  <p className="font-bold text-slate-900 dark:text-white">{badge.name}</p>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">{badge.description}</p>
+                  <p className="text-xs font-bold tracking-wide text-brand-600 uppercase dark:text-brand-300">Yangi nishon!</p>
+                  <p className="font-bold text-navy-900 dark:text-white">{badge.name}</p>
+                  <p className="text-sm text-navy-600 dark:text-navy-300">{badge.description}</p>
                 </div>
               </div>
             )}
@@ -174,7 +174,7 @@ export function SimulatorPlayer({ scenario }: { scenario: Scenario }) {
         </div>
 
         <div className="card p-6 sm:p-8">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">Sening yo‘ling</h3>
+          <h3 className="text-lg font-bold text-navy-900 dark:text-white">Sening yo‘ling</h3>
           <ol className="mt-5 space-y-4">
             {history.map((h, i) => {
               const tone = toneStyles[h.choice.outcome.tone];
@@ -182,11 +182,11 @@ export function SimulatorPlayer({ scenario }: { scenario: Scenario }) {
                 <li key={i} className="flex gap-4">
                   <div className="flex flex-col items-center">
                     <span className={cn("grid h-8 w-8 place-items-center rounded-full text-sm font-bold", tone.chip)}>{i + 1}</span>
-                    {i < history.length - 1 && <span className="mt-1 w-px flex-1 bg-slate-200 dark:bg-white/10" />}
+                    {i < history.length - 1 && <span className="mt-1 w-px flex-1 bg-navy-200 dark:bg-white/10" />}
                   </div>
                   <div className="flex-1 pb-2">
-                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{h.stepTitle}</p>
-                    <p className="font-semibold text-slate-900 dark:text-white">{h.choice.label}</p>
+                    <p className="text-xs font-semibold text-navy-500 dark:text-navy-400">{h.stepTitle}</p>
+                    <p className="font-semibold text-navy-900 dark:text-white">{h.choice.label}</p>
                     <p className={cn("mt-0.5 text-sm font-medium", tone.text)}>
                       {h.choice.outcome.title} · {h.choice.outcome.points > 0 ? "+" : ""}
                       {h.choice.outcome.points} ball
@@ -210,10 +210,10 @@ export function SimulatorPlayer({ scenario }: { scenario: Scenario }) {
       {/* Holat paneli */}
       <div className="card flex flex-wrap items-center gap-4 p-4 sm:p-5">
         <div className="flex items-center gap-3">
-          <span className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-100 text-2xl dark:bg-white/5">{scenario.emoji}</span>
+          <span className="grid h-11 w-11 place-items-center rounded-2xl bg-navy-100 text-2xl dark:bg-white/5">{scenario.emoji}</span>
           <div>
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{stepNumber}-qaror</p>
-            <p className="font-bold text-slate-900 dark:text-white">{step.title}</p>
+            <p className="text-xs font-semibold text-navy-500 dark:text-navy-400">{stepNumber}-qaror</p>
+            <p className="font-bold text-navy-900 dark:text-white">{step.title}</p>
           </div>
         </div>
         <div className="ml-auto flex min-w-[180px] flex-1 items-center gap-3 sm:max-w-xs">
@@ -225,7 +225,7 @@ export function SimulatorPlayer({ scenario }: { scenario: Scenario }) {
           <span
             className={cn(
               "min-w-[64px] text-right text-sm font-bold tabular-nums",
-              score < 0 ? "text-rose-600 dark:text-rose-400" : "text-slate-900 dark:text-white",
+              score < 0 ? "text-rose-600 dark:text-rose-400" : "text-navy-900 dark:text-white",
             )}
           >
             {score} / {maxScore}
@@ -239,7 +239,7 @@ export function SimulatorPlayer({ scenario }: { scenario: Scenario }) {
         <p className="eyebrow">
           <Sparkles className="h-3.5 w-3.5" /> Vaziyat
         </p>
-        <p className="relative mt-4 text-lg leading-relaxed text-slate-700 sm:text-xl dark:text-slate-200">{step.narrative}</p>
+        <p className="relative mt-4 text-lg leading-relaxed text-navy-700 sm:text-xl dark:text-navy-200">{step.narrative}</p>
       </div>
 
       {/* Tanlovlar */}
@@ -264,14 +264,14 @@ export function SimulatorPlayer({ scenario }: { scenario: Scenario }) {
               <span
                 className={cn(
                   "grid h-10 w-10 shrink-0 place-items-center rounded-xl text-sm font-extrabold transition",
-                  isSelected ? t.chip : "bg-slate-100 text-slate-600 group-hover:bg-brand-600 group-hover:text-white dark:bg-white/5 dark:text-slate-300",
+                  isSelected ? t.chip : "bg-navy-100 text-navy-600 group-hover:bg-brand-600 group-hover:text-white dark:bg-white/5 dark:text-navy-300",
                 )}
               >
                 {letters[i]}
               </span>
               <span className="flex-1">
-                <span className="block font-semibold text-slate-900 dark:text-white">{choice.label}</span>
-                {choice.hint && <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-400">{choice.hint}</span>}
+                <span className="block font-semibold text-navy-900 dark:text-white">{choice.label}</span>
+                {choice.hint && <span className="mt-0.5 block text-sm text-navy-500 dark:text-navy-400">{choice.hint}</span>}
               </span>
               {isSelected && (
                 <span className={cn("shrink-0 rounded-full px-2.5 py-1 text-sm font-bold tabular-nums animate-pop", t.chip)}>
@@ -289,27 +289,27 @@ export function SimulatorPlayer({ scenario }: { scenario: Scenario }) {
         <div className={cn("card overflow-hidden ring-2 animate-fade-up", tone.ring)}>
           <div className={cn("p-6 sm:p-8", tone.bg)}>
             <span className={cn("inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide", tone.chip)}>{tone.label}</span>
-            <h3 className="mt-3 text-xl font-extrabold text-slate-900 sm:text-2xl dark:text-white">{selected.outcome.title}</h3>
-            <p className="mt-2 leading-relaxed text-slate-700 dark:text-slate-200">{selected.outcome.description}</p>
+            <h3 className="mt-3 text-xl font-extrabold text-navy-900 sm:text-2xl dark:text-white">{selected.outcome.title}</h3>
+            <p className="mt-2 leading-relaxed text-navy-700 dark:text-navy-200">{selected.outcome.description}</p>
           </div>
-          <div className="grid gap-px bg-slate-200/70 sm:grid-cols-2 dark:bg-white/[0.06]">
-            <div className="bg-white p-5 sm:p-6 dark:bg-slate-900">
+          <div className="grid gap-px bg-navy-200/70 sm:grid-cols-2 dark:bg-white/[0.06]">
+            <div className="bg-white p-5 sm:p-6 dark:bg-navy-900">
               <div className="flex flex-wrap items-center gap-2">
                 <p className="flex items-center gap-2 text-sm font-bold text-brand-700 dark:text-brand-300">
                   <Gavel className="h-4 w-4" /> Huquqiy izoh
                 </p>
                 {selected.outcome.legalStatus === "needs_verification" && <LegalStatusBadge status="needs_verification" />}
               </div>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{selected.outcome.legalNote}</p>
+              <p className="mt-2 text-sm leading-relaxed text-navy-600 dark:text-navy-300">{selected.outcome.legalNote}</p>
             </div>
-            <div className="bg-white p-5 sm:p-6 dark:bg-slate-900">
+            <div className="bg-white p-5 sm:p-6 dark:bg-navy-900">
               <p className="flex items-center gap-2 text-sm font-bold text-rose-600 dark:text-rose-300">
                 <HeartHandshake className="h-4 w-4" /> Axloqiy izoh
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{selected.outcome.ethicsNote}</p>
+              <p className="mt-2 text-sm leading-relaxed text-navy-600 dark:text-navy-300">{selected.outcome.ethicsNote}</p>
             </div>
           </div>
-          <div className="flex justify-end bg-white p-4 sm:p-5 dark:bg-slate-900">
+          <div className="flex justify-end bg-white p-4 sm:p-5 dark:bg-navy-900">
             <Button onClick={next} size="lg" className="w-full sm:w-auto" autoFocus>
               {selected.outcome.nextStepId ? (
                 <>
@@ -327,12 +327,12 @@ export function SimulatorPlayer({ scenario }: { scenario: Scenario }) {
 
       {!selected && history.length > 0 && (
         <div className="flex justify-center">
-          <button onClick={restart} className="flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-800 dark:hover:text-white">
+          <button onClick={restart} className="flex items-center gap-1.5 text-sm font-medium text-navy-500 hover:text-navy-800 dark:hover:text-white">
             <RotateCcw className="h-4 w-4" /> Boshidan boshlash
           </button>
         </div>
       )}
-      <p className="text-center text-xs text-slate-400">
+      <p className="text-center text-xs text-navy-400">
         Ssenariy ta’limiy maqsadda. <Link href="/haqida" className="underline">Huquqiy aniqlik haqida</Link>
       </p>
     </div>
@@ -346,11 +346,11 @@ function Stat({ label, value, highlight }: { label: string; value: string; highl
         "rounded-2xl border p-4",
         highlight
           ? "border-amber-200 bg-amber-50 dark:border-amber-400/20 dark:bg-amber-400/10"
-          : "border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/5",
+          : "border-navy-200 bg-navy-50 dark:border-white/10 dark:bg-white/5",
       )}
     >
-      <p className="text-2xl font-extrabold text-slate-900 tabular-nums dark:text-white">{value}</p>
-      <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{label}</p>
+      <p className="text-2xl font-extrabold text-navy-900 tabular-nums dark:text-white">{value}</p>
+      <p className="text-xs font-medium text-navy-500 dark:text-navy-400">{label}</p>
     </div>
   );
 }

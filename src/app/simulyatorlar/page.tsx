@@ -36,8 +36,8 @@ export default function SimulatorsPage() {
               <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-400/10 dark:text-brand-300">
                 <h.icon className="h-5 w-5" />
               </span>
-              <h3 className="mt-4 font-bold text-slate-900 dark:text-white">{h.title}</h3>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{h.text}</p>
+              <h3 className="mt-4 font-bold text-navy-900 dark:text-white">{h.title}</h3>
+              <p className="mt-1 text-sm text-navy-600 dark:text-navy-400">{h.text}</p>
             </div>
           ))}
         </div>

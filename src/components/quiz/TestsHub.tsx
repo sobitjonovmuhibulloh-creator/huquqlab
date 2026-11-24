@@ -74,7 +74,7 @@ export function TestsHub() {
         </button>
       </div>
 
-      <h2 className="mt-12 text-xl font-extrabold text-slate-900 dark:text-white">Mavzular bo‘yicha testlar</h2>
+      <h2 className="mt-12 text-xl font-extrabold text-navy-900 dark:text-white">Mavzular bo‘yicha testlar</h2>
       <div className="mt-5 grid gap-3 md:grid-cols-2">
         {withQuiz.map((t) => {
           const r = hydrated ? progress.quizResults[t.id] : undefined;
@@ -87,15 +87,15 @@ export function TestsHub() {
             >
               <CategoryIcon categoryId={t.categoryId} />
               <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-slate-900 dark:text-white">{t.title}</p>
+                <p className="truncate font-semibold text-navy-900 dark:text-white">{t.title}</p>
                 <div className="mt-2 flex items-center gap-3">
                   <ProgressBar value={pct} className="h-1.5" barClassName={cn(pct >= 0.8 ? "from-emerald-500 to-teal-400" : undefined)} />
-                  <span className="shrink-0 text-xs font-semibold text-slate-500 tabular-nums dark:text-slate-400">
+                  <span className="shrink-0 text-xs font-semibold text-navy-500 tabular-nums dark:text-navy-400">
                     {r ? `${r.best}/${r.total}` : `${t.quiz.length} savol`}
                   </span>
                 </div>
               </div>
-              <ArrowRight className="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-1 group-hover:text-brand-600" />
+              <ArrowRight className="h-4 w-4 shrink-0 text-navy-400 transition group-hover:translate-x-1 group-hover:text-brand-600" />
             </Link>
           );
         })}

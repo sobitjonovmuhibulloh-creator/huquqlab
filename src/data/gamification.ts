@@ -18,6 +18,7 @@ export const badges: BadgeDef[] = [
   { id: "ongli-istemolchi", name: "Ongli iste’molchi", description: "Iste’molchi huquqlaringni qonuniy himoya qilding", emoji: "🧾" },
   { id: "simulyator-ustasi", name: "Simulyator ustasi", description: "Barcha simulyatorlarni o‘ynab chiqding", emoji: "🕹️" },
   { id: "haftalik-chempion", name: "Haftalik chempion", description: "Haftalik challenge'ni bajarding", emoji: "🏆" },
+  { id: "izchil-oquvchi", name: "Izchil o‘quvchi", description: "3 kun ketma-ket o‘qiding", emoji: "🔥" },
   { id: "huquq-ustasi", name: "Huquq ustasi", description: "500 XP to‘plading", emoji: "⚖️" },
 ];
 

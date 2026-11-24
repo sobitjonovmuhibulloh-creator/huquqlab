@@ -11,7 +11,7 @@ export function WeeklyChallengeCard() {
   const state = challengeProgress(progress, challenge);
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 via-rose-500 to-fuchsia-600 p-6 text-white shadow-xl shadow-rose-500/20">
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 via-rose-500 to-brand-600 p-6 text-white shadow-xl shadow-rose-500/20">
       <div className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
       <div className="relative">
         <p className="flex items-center gap-2 text-sm font-semibold text-white/80">

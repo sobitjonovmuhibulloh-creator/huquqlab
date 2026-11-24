@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { badgeById } from "@/data/gamification";
-import { challengeProgress, getCurrentChallenge } from "@/lib/gamification";
+import { challengeProgress, dailyMissionsState, getCurrentChallenge } from "@/lib/gamification";
 import * as P from "@/lib/progress";
 import { readJSON, removeKey, STORAGE_KEYS, writeJSON } from "@/lib/storage";
 import type { Scenario, UserProgress } from "@/types";
@@ -18,6 +18,8 @@ interface ProgressContextValue {
   recordQuiz: (topicId: string, correct: number, total: number) => number;
   recordSimulator: (scenario: Scenario, score: number, maxScore: number, endingId?: string) => number;
   claimWeeklyChallenge: () => void;
+  claimDailyMission: (missionId: string) => void;
+  setName: (name: string) => void;
   resetProgress: () => void;
 }
 
@@ -111,6 +113,28 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     commit(next, challenge.rewardXp, `Haftalik challenge: ${challenge.title}`);
   }, [commit]);
 
+  const claimDailyMission = useCallback(
+    (missionId: string) => {
+      const state = dailyMissionsState(ref.current).find((m) => m.mission.id === missionId);
+      if (!state || !state.done || state.claimed) return;
+      const next: UserProgress = {
+        ...ref.current,
+        xp: ref.current.xp + state.mission.rewardXp,
+        claimedChallenges: [...ref.current.claimedChallenges, state.claimKey],
+      };
+      commit(next, state.mission.rewardXp, `Kunlik vazifa: ${state.mission.title}`);
+    },
+    [commit],
+  );
+
+  const setName = useCallback(
+    (name: string) => {
+      const clean = name.trim().slice(0, 40);
+      commit({ ...ref.current, name: clean || undefined }, 0);
+    },
+    [commit],
+  );
+
   const resetProgress = useCallback(() => {
     const empty = P.emptyProgress();
     ref.current = empty;
@@ -129,9 +153,11 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       recordQuiz,
       recordSimulator,
       claimWeeklyChallenge,
+      claimDailyMission,
+      setName,
       resetProgress,
     }),
-    [progress, hydrated, toggleTopic, completeTopic, recordQuiz, recordSimulator, claimWeeklyChallenge, resetProgress],
+    [progress, hydrated, toggleTopic, completeTopic, recordQuiz, recordSimulator, claimWeeklyChallenge, claimDailyMission, setName, resetProgress],
   );
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;

@@ -8,7 +8,7 @@ import { categoryById } from "@/data/categories";
 import { countEndings, countSteps, getMaxScore } from "@/lib/scenario";
 import type { Scenario } from "@/types";
 
-const gradients = ["from-amber-400 via-orange-500 to-rose-500", "from-sky-400 via-indigo-500 to-violet-600", "from-emerald-400 via-teal-500 to-cyan-600"];
+const gradients = ["from-amber-400 via-orange-500 to-rose-500", "from-sky-400 via-brand-500 to-brand-600", "from-emerald-400 via-teal-500 to-cyan-600"];
 
 export function SimulatorCard({ scenario, index = 0 }: { scenario: Scenario; index?: number }) {
   const { progress, hydrated } = useProgress();
@@ -27,15 +27,15 @@ export function SimulatorCard({ scenario, index = 0 }: { scenario: Scenario; ind
           {scenario.emoji}
         </span>
         {result && (
-          <span className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-slate-900 backdrop-blur">
+          <span className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-navy-900 backdrop-blur">
             <Trophy className="h-3.5 w-3.5 text-amber-500" /> {result.bestScore}/{max}
           </span>
         )}
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{categoryById[scenario.categoryId]?.name}</p>
-        <h3 className="mt-1 text-xl font-extrabold text-slate-900 dark:text-white">{scenario.title}</h3>
-        <p className="mt-2 flex-1 text-sm text-slate-600 dark:text-slate-400">{scenario.tagline}</p>
+        <p className="text-xs font-semibold text-navy-500 dark:text-navy-400">{categoryById[scenario.categoryId]?.name}</p>
+        <h3 className="mt-1 text-xl font-extrabold text-navy-900 dark:text-white">{scenario.title}</h3>
+        <p className="mt-2 flex-1 text-sm text-navy-600 dark:text-navy-400">{scenario.tagline}</p>
         <div className="mt-4 flex flex-wrap gap-1.5">
           <Pill>
             <Clock className="h-3 w-3" /> {scenario.durationMinutes} daq

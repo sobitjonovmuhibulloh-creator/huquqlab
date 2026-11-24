@@ -85,7 +85,7 @@ export function TopicsExplorer() {
                 "rounded-2xl px-3 py-3 text-sm font-bold transition-all",
                 grade === g
                   ? "bg-brand-600 text-white shadow-lg shadow-brand-600/25 dark:bg-brand-500"
-                  : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5",
+                  : "text-navy-600 hover:bg-navy-100 dark:text-navy-300 dark:hover:bg-white/5",
               )}
             >
               {g ? `${g}-sinf` : "Barchasi"}
@@ -97,7 +97,7 @@ export function TopicsExplorer() {
       {/* Progress va qidiruv */}
       <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_320px]">
         <div className="relative">
-          <Search className="pointer-events-none absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-slate-400" />
+          <Search className="pointer-events-none absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-navy-400" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -108,7 +108,7 @@ export function TopicsExplorer() {
           {query && (
             <button
               onClick={() => setQuery("")}
-              className="absolute top-1/2 right-3 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10"
+              className="absolute top-1/2 right-3 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-lg text-navy-400 hover:bg-navy-100 dark:hover:bg-white/10"
               aria-label="Qidiruvni tozalash"
             >
               <X className="h-4 w-4" />
@@ -117,10 +117,10 @@ export function TopicsExplorer() {
         </div>
         <div className="card flex items-center gap-4 px-5 py-3">
           <div className="flex-1">
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{grade ? `${grade}-sinf progressi` : "Umumiy progress"}</p>
+            <p className="text-xs font-semibold text-navy-500 dark:text-navy-400">{grade ? `${grade}-sinf progressi` : "Umumiy progress"}</p>
             <ProgressBar value={gradeTopics.length ? doneInGrade / gradeTopics.length : 0} className="mt-2" barClassName="from-emerald-500 to-teal-400" />
           </div>
-          <p className="text-lg font-extrabold text-slate-900 tabular-nums dark:text-white">
+          <p className="text-lg font-extrabold text-navy-900 tabular-nums dark:text-white">
             {hydrated ? doneInGrade : 0}/{gradeTopics.length}
           </p>
         </div>
@@ -136,7 +136,7 @@ export function TopicsExplorer() {
             {c.name}
           </Chip>
         ))}
-        <span className="mx-1 hidden h-6 w-px bg-slate-200 sm:block dark:bg-white/10" />
+        <span className="mx-1 hidden h-6 w-px bg-navy-200 sm:block dark:bg-white/10" />
         {(
           [
             ["all", "Hammasi"],
@@ -152,7 +152,7 @@ export function TopicsExplorer() {
 
       {error && <p className="mt-4 rounded-xl bg-rose-50 p-3 text-sm text-rose-700 dark:bg-rose-400/10 dark:text-rose-300">{error}</p>}
 
-      <p className="mt-6 text-sm text-slate-500 dark:text-slate-400" aria-live="polite">
+      <p className="mt-6 text-sm text-navy-500 dark:text-navy-400" aria-live="polite">
         {filtered.length} ta mavzu topildi
       </p>
 
@@ -205,7 +205,7 @@ function Chip({
           ? tone === "brand"
             ? "border-brand-600 bg-brand-600 text-white dark:border-brand-500 dark:bg-brand-500"
             : "border-emerald-600 bg-emerald-600 text-white"
-          : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300 dark:hover:text-white",
+          : "border-navy-200 bg-white text-navy-600 hover:border-navy-300 hover:text-navy-900 dark:border-white/10 dark:bg-white/[0.03] dark:text-navy-300 dark:hover:text-white",
       )}
     >
       {children}

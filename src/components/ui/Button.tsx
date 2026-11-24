@@ -1,17 +1,18 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger" | "success";
+type Variant = "primary" | "secondary" | "ghost" | "danger" | "success" | "navy";
 type Size = "sm" | "md" | "lg";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-brand-600 text-white shadow-lg shadow-brand-600/25 hover:bg-brand-700 hover:shadow-brand-600/35 dark:bg-brand-500 dark:hover:bg-brand-400 dark:shadow-brand-500/20",
+    "bg-brand-700 text-white shadow-sm shadow-brand-900/20 hover:bg-brand-800 dark:bg-brand-400 dark:text-navy-950 dark:hover:bg-brand-300",
   secondary:
-    "border border-slate-200 bg-white text-slate-900 hover:border-slate-300 hover:bg-slate-50 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10",
-  ghost: "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white",
-  danger: "bg-rose-600 text-white hover:bg-rose-700 shadow-lg shadow-rose-600/20",
-  success: "bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-600/20",
+    "border border-navy-200 bg-white text-navy-900 hover:border-navy-300 hover:bg-navy-50 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10",
+  ghost: "text-navy-600 hover:bg-navy-100 hover:text-navy-900 dark:text-navy-300 dark:hover:bg-white/10 dark:hover:text-white",
+  danger: "bg-rose-600 text-white shadow-sm hover:bg-rose-700",
+  success: "bg-emerald-700 text-white shadow-sm hover:bg-emerald-800",
+  navy: "bg-navy-900 text-white shadow-sm hover:bg-navy-800 dark:bg-white dark:text-navy-950 dark:hover:bg-navy-100",
 };
 
 const sizes: Record<Size, string> = {
@@ -28,7 +29,7 @@ interface BaseProps {
 }
 
 const base =
-  "inline-flex select-none items-center justify-center font-semibold whitespace-nowrap transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/30 disabled:pointer-events-none disabled:opacity-50";
+  "inline-flex select-none items-center justify-center font-semibold whitespace-nowrap transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/40 disabled:pointer-events-none disabled:opacity-50";
 
 export function Button({
   variant = "primary",

@@ -45,15 +45,15 @@ export function AdminLoginForm() {
     <form onSubmit={submit} className="card w-full max-w-md p-7 animate-fade-up sm:p-9" noValidate>
       <div className="flex flex-col items-center text-center">
         <LogoMark className="h-14 w-14" />
-        <h1 className="mt-5 text-2xl font-extrabold text-slate-900 dark:text-white">O‘qituvchi paneliga kirish</h1>
-        <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">Kontentni boshqarish uchun parolni kiriting.</p>
+        <h1 className="mt-5 text-2xl font-extrabold text-navy-900 dark:text-white">O‘qituvchi paneliga kirish</h1>
+        <p className="mt-1.5 text-sm text-navy-500 dark:text-navy-400">Kontentni boshqarish uchun parolni kiriting.</p>
       </div>
 
       <label htmlFor="admin-password" className="label mt-7">
         Parol
       </label>
       <div className="relative">
-        <KeyRound className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <KeyRound className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-navy-400" />
         <input
           id="admin-password"
           type={show ? "text" : "password"}
@@ -68,7 +68,7 @@ export function AdminLoginForm() {
         <button
           type="button"
           onClick={() => setShow((s) => !s)}
-          className="absolute top-1/2 right-2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10"
+          className="absolute top-1/2 right-2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-navy-400 hover:bg-navy-100 dark:hover:bg-white/10"
           aria-label={show ? "Parolni yashirish" : "Parolni ko‘rsatish"}
         >
           {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -83,7 +83,7 @@ export function AdminLoginForm() {
       <Button type="submit" size="lg" className="mt-6 w-full" disabled={loading}>
         <LogIn className="h-5 w-5" /> {loading ? "Tekshirilmoqda..." : "Kirish"}
       </Button>
-      <p className="mt-5 text-center text-xs text-slate-500 dark:text-slate-400">Sessiya 8 soat davomida amal qiladi.</p>
+      <p className="mt-5 text-center text-xs text-navy-500 dark:text-navy-400">Sessiya 8 soat davomida amal qiladi.</p>
     </form>
   );
 }

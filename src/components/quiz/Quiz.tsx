@@ -71,14 +71,14 @@ export function Quiz({ quizId, questions, title = "Bilimingni sinab ko‘r", onF
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-brand-500/10 to-transparent" />
           <div className="relative">
             <div className="mx-auto grid h-28 w-28 place-items-center rounded-full animate-pop" style={{ background: `conic-gradient(${pct >= 50 ? "#10b981" : "#f43f5e"} ${pct * 3.6}deg, rgb(148 163 184 / 0.2) 0deg)` }}>
-              <div className="grid h-22 w-22 place-items-center rounded-full bg-white dark:bg-slate-900">
-                <span className="text-2xl font-extrabold text-slate-900 dark:text-white">{pct}%</span>
+              <div className="grid h-22 w-22 place-items-center rounded-full bg-white dark:bg-navy-900">
+                <span className="text-2xl font-extrabold text-navy-900 dark:text-white">{pct}%</span>
               </div>
             </div>
-            <h3 className="mt-5 text-2xl font-extrabold text-slate-900 dark:text-white">
+            <h3 className="mt-5 text-2xl font-extrabold text-navy-900 dark:text-white">
               {result.correct} / {questions.length} to‘g‘ri javob
             </h3>
-            <p className="mt-1 text-slate-600 dark:text-slate-300">{message}</p>
+            <p className="mt-1 text-navy-600 dark:text-navy-300">{message}</p>
             <p className="mt-2 text-sm font-semibold text-amber-600 dark:text-amber-400">
               {result.xp > 0 ? `+${result.xp} XP qo‘lga kiritildi` : "XP faqat eng yaxshi natija oshganda beriladi"}
             </p>
@@ -87,21 +87,21 @@ export function Quiz({ quizId, questions, title = "Bilimingni sinab ko‘r", onF
             </Button>
           </div>
         </div>
-        <div className="border-t border-slate-200/70 p-6 sm:p-8 dark:border-white/[0.06]">
-          <h4 className="font-bold text-slate-900 dark:text-white">Javoblar tahlili</h4>
+        <div className="border-t border-navy-200/70 p-6 sm:p-8 dark:border-white/[0.06]">
+          <h4 className="font-bold text-navy-900 dark:text-white">Javoblar tahlili</h4>
           <ul className="mt-4 space-y-3">
             {questions.map((question, i) => {
               const ok = answers[i] === question.correctIndex;
               return (
-                <li key={question.id} className="flex gap-3 rounded-2xl bg-slate-50 p-4 dark:bg-white/[0.03]">
+                <li key={question.id} className="flex gap-3 rounded-2xl bg-navy-50 p-4 dark:bg-white/[0.03]">
                   {ok ? <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-500" /> : <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-rose-500" />}
                   <div className="text-sm">
-                    <p className="font-semibold text-slate-900 dark:text-white">{question.question}</p>
+                    <p className="font-semibold text-navy-900 dark:text-white">{question.question}</p>
                     {!ok && (
                       <p className="mt-1 text-rose-600 dark:text-rose-400">Sizning javobingiz: {question.options[answers[i]]}</p>
                     )}
                     <p className="mt-1 text-emerald-700 dark:text-emerald-400">To‘g‘ri javob: {question.options[question.correctIndex]}</p>
-                    <p className="mt-1 text-slate-500 dark:text-slate-400">{question.explanation}</p>
+                    <p className="mt-1 text-navy-500 dark:text-navy-400">{question.explanation}</p>
                   </div>
                 </li>
               );
@@ -119,7 +119,7 @@ export function Quiz({ quizId, questions, title = "Bilimingni sinab ko‘r", onF
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm font-bold text-brand-600 dark:text-brand-400">{title}</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-navy-500 dark:text-navy-400">
             {index + 1}-savol / {questions.length}
             {best && ` · Eng yaxshi natija: ${best.best}/${best.total}`}
           </p>
@@ -127,7 +127,7 @@ export function Quiz({ quizId, questions, title = "Bilimingni sinab ko‘r", onF
         <ProgressBar value={(index + (selected !== null ? 1 : 0)) / questions.length} className="max-w-[200px]" label="Test jarayoni" />
       </div>
 
-      <h3 key={q.id} className="mt-6 text-lg font-bold text-slate-900 animate-fade-in sm:text-xl dark:text-white">
+      <h3 key={q.id} className="mt-6 text-lg font-bold text-navy-900 animate-fade-in sm:text-xl dark:text-white">
         {q.question}
       </h3>
 
@@ -143,17 +143,17 @@ export function Quiz({ quizId, questions, title = "Bilimingni sinab ko‘r", onF
               disabled={reveal}
               className={cn(
                 "flex items-center gap-3 rounded-2xl border p-3.5 text-left text-sm font-medium transition-all sm:p-4 sm:text-base",
-                !reveal && "border-slate-200 hover:border-brand-400 hover:bg-brand-50/50 dark:border-white/10 dark:hover:border-brand-400/50 dark:hover:bg-brand-400/5",
+                !reveal && "border-navy-200 hover:border-brand-400 hover:bg-brand-50/50 dark:border-white/10 dark:hover:border-brand-400/50 dark:hover:bg-brand-400/5",
                 reveal && correct && "border-emerald-500 bg-emerald-50 text-emerald-900 dark:bg-emerald-400/10 dark:text-emerald-100",
                 reveal && chosen && !correct && "animate-shake border-rose-500 bg-rose-50 text-rose-900 dark:bg-rose-400/10 dark:text-rose-100",
-                reveal && !chosen && !correct && "border-slate-200 opacity-50 dark:border-white/10",
-                "text-slate-800 dark:text-slate-100",
+                reveal && !chosen && !correct && "border-navy-200 opacity-50 dark:border-white/10",
+                "text-navy-800 dark:text-navy-100",
               )}
             >
               <span
                 className={cn(
                   "grid h-8 w-8 shrink-0 place-items-center rounded-lg text-sm font-bold",
-                  reveal && correct ? "bg-emerald-500 text-white" : reveal && chosen ? "bg-rose-500 text-white" : "bg-slate-100 text-slate-600 dark:bg-white/10 dark:text-slate-300",
+                  reveal && correct ? "bg-emerald-500 text-white" : reveal && chosen ? "bg-rose-500 text-white" : "bg-navy-100 text-navy-600 dark:bg-white/10 dark:text-navy-300",
                 )}
               >
                 {letters[i]}
@@ -176,7 +176,7 @@ export function Quiz({ quizId, questions, title = "Bilimingni sinab ko‘r", onF
           <p className={cn("font-bold", isCorrect ? "text-emerald-700 dark:text-emerald-300" : "text-rose-700 dark:text-rose-300")}>
             {isCorrect ? "To‘g‘ri! 🎉" : "Noto‘g‘ri javob"}
           </p>
-          <p className="mt-1 text-sm text-slate-700 dark:text-slate-300">{q.explanation}</p>
+          <p className="mt-1 text-sm text-navy-700 dark:text-navy-300">{q.explanation}</p>
           <div className="mt-4 flex justify-end">
             <Button onClick={next} autoFocus>
               {index + 1 < questions.length ? (
