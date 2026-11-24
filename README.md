@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HuquqLab
 
-## Getting Started
+**Huquqingni bil. Kelajagingni himoya qil.**
 
-First, run the development server:
+HuquqLab — O‘zbekiston maktab o‘quvchilari (7–11-sinf) uchun sodda darslar, hayotiy vaziyatlar, interaktiv simulyatorlar va testlar orqali huquqni o‘rgatuvchi platforma.
+
+## Ishga tushirish
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # so‘ng ADMIN_PASSWORD va ADMIN_SESSION_SECRET ni o‘zgartiring
+npm run dev        # http://localhost:3100
+npm run build      # production build
+npm run start      # production server (http://localhost:3100)
+npm run check      # kontent, simulyator grafi va XP mantiqini tekshirish
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Imkoniyatlar
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Bo‘lim | Manzil | Tavsif |
+| --- | --- | --- |
+| Bosh sahifa | `/` | Hero, statistika, ommabop mavzular, jonli simulyator preview |
+| Mavzular | `/mavzular` | Sinf (7–11), kategoriya, qidiruv, o‘rganilgan/o‘rganilmagan filtri (filtrlar URL’da saqlanadi) |
+| Mavzu sahifasi | `/mavzular/[slug]` | Kirish, tushuntirish, tushunchalar, huquqiy asos, misol, vaziyat tahlili, xulosa, test |
+| Simulyatorlar | `/simulyatorlar` | «Topilgan hamyon», «Sinf guruhidagi masxara», «Nosoz quloqchin» |
+| Testlar | `/testlar` | Mavzu testlari va 10 savollik tasodifiy tezkor test |
+| Progress | `/profil` | XP, daraja, nishonlar, haftalik challenge, faollik |
+| O‘qituvchi paneli | `/admin` | Mavzu CRUD, test savollari, simulyatorlar tekshiruvi, JSON import/eksport |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Arxitektura
 
-## Learn More
+```
+src/
+  app/                 Next.js App Router sahifalari
+  components/
+    providers/         Theme, Toast, Content, Progress (React Context)
+    simulator/         Qayta ishlatiladigan SimulatorPlayer
+    quiz/              Quiz va TestsHub
+    topics/            Katalog, karta, mavzu sahifasi
+    admin/             O‘qituvchi paneli
+    gamification/      Profil, haftalik challenge
+  data/                Demo kontent: mavzular, simulyatorlar, nishonlar
+  lib/                 Sof mantiq: progress, gamification, scenario, repository
+  types/               Domen type’lari
+prisma/schema.prisma   PostgreSQL sxemasi (kelajak uchun)
+scripts/check-content.ts
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Yangi simulyator qo‘shish
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`src/data/simulators.ts` ga yangi `Scenario` obyekti qo‘shing. Har bir qadamda tanlovlar bor; har bir tanlov `points`, `tone`, huquqiy va axloqiy izoh beradi va `nextStepId` (keyingi qadam) yoki `endingId` (yakun) ga ega. Player, ball hisoblash, maksimal ball va mukofotlar avtomatik ishlaydi. `npm run check` grafni tekshiradi.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Ma’lumotlar bazasiga o‘tish
 
-## Deploy on Vercel
+Hozir kontent `src/data` dan, admin o‘zgarishlari va progress esa `localStorage` dan olinadi. Barcha kontent so‘rovlari `ContentRepository` interfeysi (`src/lib/repository.ts`) orqali o‘tadi:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. `npm i -D prisma && npm i @prisma/client`, `.env` ga `DATABASE_URL`.
+2. `npx prisma migrate dev --name init`.
+3. `PrismaContentRepository` (API route orqali) yozib, `contentRepository` ni almashtiring.
+4. Progress uchun `ProgressProvider` dagi `readJSON/writeJSON` ni API chaqiruvlariga almashtiring.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+UI komponentlari o‘zgarmaydi.
+
+## O‘qituvchi paneliga kirish
+
+`/admin` sahifalari `src/middleware.ts` orqali himoyalangan. Kirmagan foydalanuvchi `/admin/kirish` ga yo‘naltiriladi.
+
+- Parol `.env.local` dagi `ADMIN_PASSWORD` dan olinadi va faqat serverda tekshiriladi (`/api/admin/login`).
+- Muvaffaqiyatli kirishda HMAC-SHA256 bilan imzolangan, 8 soat amal qiluvchi `httpOnly` cookie beriladi.
+- Parolni o‘zgartirsangiz, barcha eski sessiyalar avtomatik bekor bo‘ladi.
+- Bir IP manzildan 15 daqiqada 5 ta noto‘g‘ri urinishdan keyin kirish vaqtincha bloklanadi.
+- `.env.local` o‘zgargandan keyin serverni qayta ishga tushiring.
+
+## Huquqiy aniqlik
+
+- Hujjat nomi rasmiy bo‘lsa — **«Rasmiy hujjat»** belgisi.
+- Modda raqami, muddat, miqdor yoki yosh chegarasi rasmiy matn bilan solishtirilmagan bo‘lsa — **«Tekshirish talab etiladi»** belgisi.
+- Darsda qo‘llashdan oldin [lex.uz](https://lex.uz) orqali tekshiring. Kontent yuridik maslahat emas.
+
+## Demo cheklovlari
+
+- Bitta umumiy o‘qituvchi paroli (foydalanuvchi akkauntlari yo‘q).
+- Urinishlar cheklovi server xotirasida — bir nechta server instansiyasida Redis kabi umumiy xotira kerak.
+- Admin o‘zgarishlari faqat shu brauzerda saqlanadi.
+- Progress qurilmalar o‘rtasida sinxronlanmaydi.

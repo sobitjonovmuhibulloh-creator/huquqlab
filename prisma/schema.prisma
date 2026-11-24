@@ -1,0 +1,241 @@
+// HuquqLab — PostgreSQL + Prisma sxemasi (kelajak uchun tayyor).
+// Hozirgi demo versiya bu sxemani ishlatmaydi: kontent src/data'dan,
+// progress esa localStorage'dan olinadi. Tuzilma src/types/index.ts bilan mos.
+//
+// Ulash:
+//   npm i -D prisma && npm i @prisma/client
+//   .env: DATABASE_URL="postgresql://user:pass@localhost:5432/huquqlab"
+//   npx prisma migrate dev --name init
+// So'ng src/lib/repository.ts'da PrismaContentRepository yozib,
+// contentRepository eksportini almashtiring.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum Difficulty {
+  OSON
+  ORTA
+  MURAKKAB
+}
+
+enum LegalStatus {
+  VERIFIED
+  NEEDS_VERIFICATION
+}
+
+enum ActivityType {
+  TOPIC
+  QUIZ
+  SIMULATOR
+}
+
+model User {
+  id                String             @id @default(cuid())
+  name              String
+  email             String?            @unique
+  role              Role               @default(STUDENT)
+  grade             Int?
+  xp                Int                @default(0)
+  schoolId          String?
+  school            School?            @relation(fields: [schoolId], references: [id])
+  createdAt         DateTime           @default(now())
+  completedTopics   TopicCompletion[]
+  quizAttempts      QuizAttempt[]
+  simulatorRuns     SimulatorRun[]
+  badges            UserBadge[]
+  activities        Activity[]
+  challengeClaims   ChallengeClaim[]
+}
+
+model School {
+  id     String @id @default(cuid())
+  name   String
+  region String
+  users  User[]
+}
+
+model Category {
+  id          String  @id // masalan: "inson-huquqlari"
+  name        String
+  description String
+  icon        String
+  color       String
+  topics      Topic[]
+}
+
+model Topic {
+  id               String            @id @default(cuid())
+  slug             String            @unique
+  title            String
+  shortDescription String
+  categoryId       String
+  category         Category          @relation(fields: [categoryId], references: [id])
+  grades           Int[]
+  durationMinutes  Int
+  difficulty       Difficulty
+  popular          Boolean           @default(false)
+  intro            String
+  explanation      String[]
+  example          String
+  caseSituation    String
+  caseQuestion     String
+  caseAnalysis     String
+  summary          String[]
+  published        Boolean           @default(true)
+  simulatorId      String?
+  simulator        Scenario?         @relation(fields: [simulatorId], references: [id])
+  concepts         KeyConcept[]
+  legalBasis       LegalReference[]
+  questions        QuizQuestion[]
+  completions      TopicCompletion[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([categoryId])
+}
+
+model KeyConcept {
+  id         String @id @default(cuid())
+  topicId    String
+  topic      Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  term       String
+  definition String
+  order      Int    @default(0)
+}
+
+model LegalReference {
+  id       String      @id @default(cuid())
+  topicId  String
+  topic    Topic       @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  document String
+  article  String?
+  summary  String
+  status   LegalStatus @default(NEEDS_VERIFICATION)
+  /// Rasmiy manba havolasi (lex.uz) — tekshirilgandan keyin to'ldiriladi
+  sourceUrl  String?
+  verifiedAt DateTime?
+  order      Int       @default(0)
+}
+
+model QuizQuestion {
+  id           String        @id @default(cuid())
+  topicId      String
+  topic        Topic         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  question     String
+  /// Har doim 4 ta variant
+  options      String[]
+  correctIndex Int
+  explanation  String
+  order        Int           @default(0)
+}
+
+/// Ssenariy grafi JSON sifatida saqlanadi (steps, rewards) — Scenario type'iga mos
+model Scenario {
+  id               String         @id
+  title            String
+  tagline          String
+  description      String
+  grades           Int[]
+  categoryId       String
+  durationMinutes  Int
+  emoji            String
+  startStepId      String
+  steps            Json
+  rewards          Json
+  published        Boolean        @default(true)
+  topics           Topic[]
+  runs             SimulatorRun[]
+  updatedAt        DateTime       @updatedAt
+}
+
+model TopicCompletion {
+  userId      String
+  topicId     String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic       Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  completedAt DateTime @default(now())
+
+  @@id([userId, topicId])
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Mavzu id yoki "tezkor-test"
+  quizId    String
+  correct   Int
+  total     Int
+  createdAt DateTime @default(now())
+
+  @@index([userId, quizId])
+}
+
+model SimulatorRun {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scenarioId String
+  scenario   Scenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  score      Int
+  maxScore   Int
+  endingId   String?
+  /// Tanlangan qadamlar ketma-ketligi
+  path       Json
+  createdAt  DateTime @default(now())
+
+  @@index([userId, scenarioId])
+}
+
+model Badge {
+  id          String      @id
+  name        String
+  description String
+  emoji       String
+  users       UserBadge[]
+}
+
+model UserBadge {
+  userId   String
+  badgeId  String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge    Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  earnedAt DateTime @default(now())
+
+  @@id([userId, badgeId])
+}
+
+model Activity {
+  id     String       @id @default(cuid())
+  userId String
+  user   User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type   ActivityType
+  refId  String
+  value  Int?
+  at     DateTime     @default(now())
+
+  @@index([userId, at])
+}
+
+model ChallengeClaim {
+  userId      String
+  /// masalan: "2026-W48:wc-topics-3"
+  claimKey    String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rewardXp    Int
+  claimedAt   DateTime @default(now())
+
+  @@id([userId, claimKey])
+}
