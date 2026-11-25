@@ -8,7 +8,7 @@ import { categoryById } from "@/data/categories";
 import { countEndings, countSteps, getMaxScore } from "@/lib/scenario";
 import type { Scenario } from "@/types";
 
-const gradients = ["from-amber-400 via-orange-500 to-rose-500", "from-sky-400 via-brand-500 to-brand-600", "from-emerald-400 via-teal-500 to-cyan-600"];
+const gradients = ["from-navy-800 to-brand-800", "from-brand-700 to-navy-900", "from-navy-900 to-navy-700"];
 
 export function SimulatorCard({ scenario, index = 0 }: { scenario: Scenario; index?: number }) {
   const { progress, hydrated } = useProgress();

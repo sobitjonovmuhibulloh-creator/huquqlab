@@ -11,6 +11,7 @@ import { badges } from "@/data/gamification";
 import { getLevel } from "@/lib/gamification";
 import { getMaxScore } from "@/lib/scenario";
 import { cn, formatDate } from "@/lib/utils";
+import { TodayPanel } from "./TodayPanel";
 import { WeeklyChallengeCard } from "./WeeklyChallengeCard";
 
 const activityLabel = { topic: "Mavzu o‘rganildi", quiz: "Test ishlandi", simulator: "Simulyator o‘ynaldi" } as const;
@@ -41,16 +42,18 @@ export function ProfileDashboard() {
 
   const stats = [
     { icon: BookOpenCheck, label: "O‘rganilgan mavzular", value: `${completed.length}/${topics.length}`, color: "text-brand-600 bg-brand-100 dark:bg-brand-400/15 dark:text-brand-300" },
-    { icon: ListChecks, label: "Ishlangan testlar", value: quizzesTaken, color: "text-emerald-600 bg-emerald-100 dark:bg-emerald-400/15 dark:text-emerald-300" },
-    { icon: Gamepad2, label: "Simulyatorlar", value: `${simsPlayed}/${scenarios.length}`, color: "text-brand-600 bg-brand-100 dark:bg-brand-400/15 dark:text-brand-300" },
+    { icon: ListChecks, label: "Ishlangan testlar", value: quizzesTaken, color: "text-emerald-700 bg-emerald-100 dark:bg-emerald-400/15 dark:text-emerald-300" },
+    { icon: Gamepad2, label: "Simulyatorlar", value: `${simsPlayed}/${scenarios.length}`, color: "text-navy-700 bg-navy-100 dark:bg-white/10 dark:text-navy-200" },
     { icon: Medal, label: "Nishonlar", value: `${earnedCount}/${badges.length}`, color: "text-amber-600 bg-amber-100 dark:bg-amber-400/15 dark:text-amber-300" },
   ];
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+      <TodayPanel />
+
+      <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr] [&>*]:min-w-0">
         {/* Daraja */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-600 to-brand-800 p-6 text-white shadow-xl shadow-brand-600/20 sm:p-8">
+        <div className="relative overflow-hidden rounded-3xl bg-brand-800 p-6 text-white shadow-xl shadow-brand-900/20 dark:bg-brand-900/70 dark:ring-1 dark:ring-white/10 sm:p-8">
           <div className="bg-grid pointer-events-none absolute inset-0 opacity-20" />
           <div className="relative">
             <p className="text-sm font-semibold text-white/70">{level.level}-daraja</p>
@@ -108,7 +111,7 @@ export function ProfileDashboard() {
         </div>
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
         {/* O'tilgan mavzular */}
         <section className="card p-6">
           <h2 className="text-lg font-extrabold text-navy-900 dark:text-white">O‘tilgan mavzular</h2>

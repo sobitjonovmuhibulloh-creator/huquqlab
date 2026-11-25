@@ -14,6 +14,7 @@ export const navItems = [
   { href: "/mavzular", label: "Mavzular" },
   { href: "/simulyatorlar", label: "Simulyatorlar" },
   { href: "/testlar", label: "Testlar" },
+  { href: "/kutubxona", label: "Kutubxona" },
   { href: "/profil", label: "Progress" },
   { href: "/admin", label: "O‘qituvchi" },
 ];

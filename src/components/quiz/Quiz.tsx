@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ArrowRight, CheckCircle2, RotateCcw, Trophy, XCircle } from "lucide-react";
 import { useProgress } from "@/components/providers/ProgressProvider";
 import { Button } from "@/components/ui/Button";
-import { EmptyState, ProgressBar } from "@/components/ui/misc";
+import { EmptyState } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import type { QuizQuestion } from "@/types";
 
@@ -124,7 +124,25 @@ export function Quiz({ quizId, questions, title = "Bilimingni sinab ko‘r", onF
             {best && ` · Eng yaxshi natija: ${best.best}/${best.total}`}
           </p>
         </div>
-        <ProgressBar value={(index + (selected !== null ? 1 : 0)) / questions.length} className="max-w-[200px]" label="Test jarayoni" />
+        <ol className="flex flex-wrap gap-1.5" aria-label="Savollar holati">
+          {questions.map((question, i) => {
+            const answer = i < answers.length ? answers[i] : i === index ? selected : null;
+            const state = answer === null ? (i === index ? "current" : "todo") : answer === question.correctIndex ? "right" : "wrong";
+            return (
+              <li
+                key={question.id}
+                aria-label={`${i + 1}-savol: ${{ current: "joriy", todo: "javob berilmagan", right: "to‘g‘ri", wrong: "noto‘g‘ri" }[state]}`}
+                className={cn(
+                  "h-2.5 w-2.5 rounded-full transition-all",
+                  state === "todo" && "bg-navy-200 dark:bg-white/15",
+                  state === "current" && "w-6 bg-brand-600 dark:bg-brand-400",
+                  state === "right" && "bg-emerald-500",
+                  state === "wrong" && "bg-rose-500",
+                )}
+              />
+            );
+          })}
+        </ol>
       </div>
 
       <h3 key={q.id} className="mt-6 text-lg font-bold text-navy-900 animate-fade-in sm:text-xl dark:text-white">

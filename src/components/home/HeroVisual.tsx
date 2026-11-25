@@ -4,7 +4,7 @@ import { Check, Flame, Zap } from "lucide-react";
 export function HeroVisual() {
   return (
     <div className="relative mx-auto w-full max-w-md lg:max-w-none" aria-hidden>
-      <div className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-brand-500/25 via-brand-500/15 to-emerald-400/20 blur-2xl" />
+      <div className="absolute -inset-6 rounded-[2.5rem] bg-brand-500/20 blur-2xl" />
 
       {/* Asosiy karta */}
       <div className="card relative rotate-[-1.5deg] p-6 shadow-2xl shadow-brand-900/10">
@@ -57,7 +57,7 @@ export function HeroVisual() {
         <div>
           <p className="text-[11px] font-semibold text-navy-500">Haftalik challenge</p>
           <div className="mt-1 h-1.5 w-28 overflow-hidden rounded-full bg-navy-200 dark:bg-white/10">
-            <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-orange-400 to-rose-500" />
+            <div className="h-full w-2/3 rounded-full bg-brand-500" />
           </div>
         </div>
       </div>

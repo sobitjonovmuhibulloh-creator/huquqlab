@@ -45,7 +45,7 @@ export default function HomePage() {
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
-        <div className="pointer-events-none absolute -top-40 left-1/2 h-[28rem] w-[60rem] -translate-x-1/2 rounded-full bg-gradient-to-r from-brand-500/20 via-brand-500/20 to-sky-400/20 blur-3xl" />
+        <div className="pointer-events-none absolute -top-40 left-1/2 h-[28rem] w-[60rem] -translate-x-1/2 rounded-full bg-brand-500/15 blur-3xl" />
         <div className="container-page relative grid items-center gap-16 pt-12 pb-20 sm:pt-20 lg:grid-cols-[1.1fr_1fr] lg:pb-28">
           <div>
             <p className="eyebrow animate-fade-up">
@@ -53,7 +53,7 @@ export default function HomePage() {
             </p>
             <h1 className="mt-6 text-5xl leading-[1.05] font-extrabold text-navy-900 animate-fade-up [animation-delay:60ms] sm:text-6xl lg:text-7xl dark:text-white">
               Huquqingni bil.{" "}
-              <span className="bg-gradient-to-r from-brand-600 via-brand-600 to-brand-500 bg-clip-text text-transparent dark:from-brand-400 dark:via-brand-400 dark:to-brand-400">
+              <span className="text-brand-700 dark:text-brand-400">
                 Kelajagingni himoya qil.
               </span>
             </h1>
@@ -227,13 +227,13 @@ export default function HomePage() {
 
       {/* CTA */}
       <section className="container-page mt-24">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-600 via-brand-600 to-brand-800 px-6 py-14 text-center text-white shadow-2xl shadow-brand-600/25 sm:px-12">
+        <div className="relative overflow-hidden rounded-[2rem] bg-navy-900 px-6 py-14 text-center text-white shadow-2xl shadow-navy-900/25 dark:bg-navy-800/60 dark:ring-1 dark:ring-white/10 sm:px-12">
           <div className="bg-grid pointer-events-none absolute inset-0 opacity-20 [mask-image:radial-gradient(circle,black,transparent_70%)]" />
           <div className="relative">
             <h2 className="mx-auto max-w-2xl text-3xl font-extrabold sm:text-4xl">Birinchi mavzuni 10 daqiqada o‘rgan va ilk nishoningni ol</h2>
             <p className="mx-auto mt-3 max-w-xl text-white/80">Ro‘yxatdan o‘tish shart emas — progressing shu qurilmada saqlanadi.</p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <Link href="/mavzular" className="inline-flex h-13 items-center justify-center gap-2 rounded-2xl bg-white px-7 font-bold text-brand-700 transition hover:bg-white/90">
+              <Link href="/mavzular" className="inline-flex h-13 items-center justify-center gap-2 rounded-2xl bg-brand-400 px-7 font-bold text-navy-950 transition hover:bg-brand-300">
                 O‘rganishni boshlash <ArrowRight className="h-5 w-5" />
               </Link>
               <Link href="/testlar" className="inline-flex h-13 items-center justify-center gap-2 rounded-2xl border border-white/30 px-7 font-bold text-white transition hover:bg-white/10">

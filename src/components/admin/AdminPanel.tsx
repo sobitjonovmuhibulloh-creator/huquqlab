@@ -22,6 +22,7 @@ import { useContent } from "@/components/providers/ContentProvider";
 import { useToast } from "@/components/providers/ToastProvider";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
+import { useConfirm } from "@/components/ui/ConfirmDialog";
 import { EmptyState, Pill } from "@/components/ui/misc";
 import { categoryById } from "@/data/categories";
 import { countEndings, countSteps, getMaxScore, validateScenario } from "@/lib/scenario";
@@ -88,11 +89,12 @@ function TopicManager() {
   const { toast } = useToast();
   const [editing, setEditing] = useState<Topic | "new" | null>(null);
   const [query, setQuery] = useState("");
+  const [confirm, confirmDialog] = useConfirm();
 
   const filtered = topics.filter((t) => normalizeSearch(t.title).includes(normalizeSearch(query)));
 
   async function remove(t: Topic) {
-    if (!window.confirm(`«${t.title}» mavzusini o‘chirasizmi?`)) return;
+    if (!(await confirm({ title: `«${t.title}» mavzusini o‘chirasizmi?`, description: "Mavzu, uning darsi va test savollari o‘chadi." }))) return;
     try {
       await deleteTopic(t.id);
       toast({ tone: "success", title: "Mavzu o‘chirildi" });
@@ -107,6 +109,7 @@ function TopicManager() {
 
   return (
     <div className="space-y-4">
+      {confirmDialog}
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-navy-400" />

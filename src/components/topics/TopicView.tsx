@@ -143,7 +143,7 @@ export function TopicView({ slug }: { slug: string }) {
             {scenario && (
               <Link
                 href={`/simulyatorlar/${scenario.id}`}
-                className="mt-4 flex items-center gap-2 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-600 p-4 text-sm font-semibold text-white shadow-lg shadow-brand-600/20 transition hover:shadow-xl"
+                className="mt-4 flex items-center gap-2 rounded-2xl bg-brand-700 p-4 text-sm font-semibold text-white shadow-lg shadow-brand-900/20 hover:bg-brand-800 transition hover:shadow-xl"
               >
                 <Gamepad2 className="h-5 w-5" /> Simulyatorda sinab ko‘r
               </Link>
@@ -225,7 +225,7 @@ export function TopicView({ slug }: { slug: string }) {
           </Section>
 
           <Section id="misol" title="Hayotiy misol" icon={Target}>
-            <div className="rounded-2xl bg-gradient-to-br from-sky-50 to-brand-50 p-5 dark:from-sky-400/[0.06] dark:to-brand-400/[0.06]">
+            <div className="rounded-2xl bg-brand-50 p-5 dark:bg-brand-400/[0.06]">
               <p className="leading-relaxed text-navy-700 dark:text-navy-200">{topic.example}</p>
             </div>
           </Section>
@@ -266,7 +266,7 @@ export function TopicView({ slug }: { slug: string }) {
               ))}
             </ul>
             {!completed && (
-              <div className="mt-5 flex flex-col items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 p-5 text-white sm:flex-row">
+              <div className="mt-5 flex flex-col items-center justify-between gap-3 rounded-2xl bg-emerald-700 p-5 text-white sm:flex-row">
                 <p className="font-semibold">Mavzuni o‘qib chiqdingmi? Belgilab, +50 XP ol!</p>
                 <button
                   onClick={() => completeTopic(topic.id)}
@@ -285,7 +285,7 @@ export function TopicView({ slug }: { slug: string }) {
           {scenario && (
             <Link
               href={`/simulyatorlar/${scenario.id}`}
-              className="group flex items-center gap-5 overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-600 to-brand-700 p-6 text-white shadow-xl shadow-brand-600/20 transition hover:-translate-y-0.5 sm:p-8"
+              className="group flex items-center gap-5 overflow-hidden rounded-3xl bg-navy-900 p-6 text-white shadow-xl shadow-navy-900/20 dark:bg-navy-800/60 dark:ring-1 dark:ring-white/10 transition hover:-translate-y-0.5 sm:p-8"
             >
               <span className="text-5xl transition group-hover:scale-110">{scenario.emoji}</span>
               <div className="flex-1">

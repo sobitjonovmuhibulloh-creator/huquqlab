@@ -56,7 +56,7 @@ export function TestsHub() {
 
   return (
     <div>
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 p-6 text-white shadow-xl shadow-emerald-500/20 sm:p-8">
+      <div className="relative overflow-hidden rounded-3xl bg-navy-900 p-6 text-white shadow-xl shadow-navy-900/20 dark:bg-navy-800/60 dark:ring-1 dark:ring-white/10 sm:p-8">
         <div className="pointer-events-none absolute -right-10 -bottom-16 text-[10rem] leading-none opacity-15">🎲</div>
         <p className="text-sm font-semibold text-white/80">Tezkor test</p>
         <h2 className="mt-1 text-2xl font-extrabold sm:text-3xl">Barcha mavzulardan {MIX_SIZE} ta tasodifiy savol</h2>
@@ -68,14 +68,14 @@ export function TestsHub() {
         )}
         <button
           onClick={startMix}
-          className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-white px-5 font-bold text-emerald-700 transition hover:bg-white/90 active:scale-[0.98]"
+          className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-brand-400 px-5 font-bold text-navy-950 transition hover:bg-brand-300 active:scale-[0.98]"
         >
           <Shuffle className="h-4 w-4" /> Boshlash
         </button>
       </div>
 
       <h2 className="mt-12 text-xl font-extrabold text-navy-900 dark:text-white">Mavzular bo‘yicha testlar</h2>
-      <div className="mt-5 grid gap-3 md:grid-cols-2">
+      <div className="mt-5 grid gap-3 md:grid-cols-2 [&>*]:min-w-0">
         {withQuiz.map((t) => {
           const r = hydrated ? progress.quizResults[t.id] : undefined;
           const pct = r ? r.best / r.total : 0;

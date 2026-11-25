@@ -5,6 +5,7 @@ import { CheckCircle2, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { useContent } from "@/components/providers/ContentProvider";
 import { useToast } from "@/components/providers/ToastProvider";
 import { Button } from "@/components/ui/Button";
+import { useConfirm } from "@/components/ui/ConfirmDialog";
 import { EmptyState } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import type { QuizQuestion, Topic } from "@/types";
@@ -26,6 +27,7 @@ export function QuestionManager() {
   const [editing, setEditing] = useState<QuizQuestion | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirm, confirmDialog] = useConfirm();
 
   // Tanlangan mavzu o'chirilgan yoki import qilingan bo'lsa — birinchisiga qaytamiz
   const topic = topics.find((t) => t.id === topicId) ?? topics[0];
@@ -62,12 +64,13 @@ export function QuestionManager() {
 
   async function remove(id: string) {
     if (!topic) return;
-    if (!window.confirm("Savolni o‘chirasizmi?")) return;
+    if (!(await confirm({ title: "Savolni o‘chirasizmi?", description: "Bu amalni ortga qaytarib bo‘lmaydi." }))) return;
     await persist({ ...topic, quiz: topic.quiz.filter((q) => q.id !== id) }, "Savol o‘chirildi");
   }
 
   return (
     <div className="space-y-5">
+      {confirmDialog}
       <div className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
         <label className="label mb-0 shrink-0" htmlFor="topic-select">
           Mavzu:

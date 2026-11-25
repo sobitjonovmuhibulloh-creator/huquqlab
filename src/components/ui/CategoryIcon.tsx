@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { categoryById } from "@/data/categories";
 import { cn } from "@/lib/utils";
-import type { Category, CategoryId } from "@/types";
+import type { CategoryId } from "@/types";
 
 const icons: Record<string, LucideIcon> = {
   Briefcase,
