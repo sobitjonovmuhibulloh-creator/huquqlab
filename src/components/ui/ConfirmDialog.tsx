@@ -8,6 +8,8 @@ interface Request {
   title: string;
   description?: string;
   confirmLabel?: string;
+  /** "danger" — o'chirish kabi qaytarib bo'lmas amallar (standart); "primary" — oddiy tasdiqlash */
+  tone?: "danger" | "primary";
   resolve: (ok: boolean) => void;
 }
 
@@ -47,7 +49,13 @@ export function useConfirm() {
       aria-labelledby="confirm-title"
     >
       <div className="p-6 animate-pop">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-rose-100 text-rose-600 dark:bg-rose-400/15 dark:text-rose-300">
+        <span
+          className={
+            request.tone === "primary"
+              ? "grid h-11 w-11 place-items-center rounded-2xl bg-brand-100 text-brand-700 dark:bg-brand-400/15 dark:text-brand-300"
+              : "grid h-11 w-11 place-items-center rounded-2xl bg-rose-100 text-rose-600 dark:bg-rose-400/15 dark:text-rose-300"
+          }
+        >
           <AlertTriangle className="h-5 w-5" />
         </span>
         <h2 id="confirm-title" className="mt-4 text-lg font-extrabold">
@@ -58,7 +66,7 @@ export function useConfirm() {
           <Button variant="secondary" onClick={() => close(false)} autoFocus>
             Bekor qilish
           </Button>
-          <Button variant="danger" onClick={() => close(true)}>
+          <Button variant={request.tone === "primary" ? "primary" : "danger"} onClick={() => close(true)}>
             {request.confirmLabel ?? "O‘chirish"}
           </Button>
         </div>

@@ -2,3 +2,5 @@
 .next
 node_modules
 scripts/_tmp*
+# Lokal baza (PGlite), import fayllari va mualliflik huquqi bilan himoyalangan manbalar — deploy'ga yuklanmasin
+.data

@@ -3,41 +3,110 @@ import {
   ArrowRight,
   BadgeCheck,
   BookOpenCheck,
+  Briefcase,
+  ClipboardCheck,
+  FileSearch,
   Gamepad2,
   GraduationCap,
+  Landmark,
+  LineChart,
   ListChecks,
-  ShieldCheck,
-  Sparkles,
-  Trophy,
+  RotateCcw,
+  Scale,
+  School,
+  Timer,
+  Users,
+  type LucideIcon,
 } from "lucide-react";
-import { WeeklyChallengeCard } from "@/components/gamification/WeeklyChallengeCard";
-import { HeroVisual } from "@/components/home/HeroVisual";
+import { ExamCard } from "@/components/exam/ExamCard";
+import { ExamPreviewVisual } from "@/components/home/ExamPreviewVisual";
 import { SimulatorPreview } from "@/components/home/SimulatorPreview";
-import { TopicCard } from "@/components/topics/TopicCard";
 import { ButtonLink } from "@/components/ui/Button";
-import { CategoryIcon } from "@/components/ui/CategoryIcon";
-import { categories } from "@/data/categories";
-import { badges } from "@/data/gamification";
+import { documents } from "@/data/documents";
+import { exams, NATIONAL_FORMAT } from "@/data/exams";
 import { scenarios } from "@/data/simulators";
 import { topics } from "@/data/topics";
-import { GRADES } from "@/types";
+import { cn } from "@/lib/utils";
+import { questionBank } from "@/server/questions";
 
+/** Faqat haqiqiy ma'lumotlardan hisoblangan statistika — demo raqamlar yo'q */
+const readyExams = exams.filter((e) => e.status === "available");
 const stats = [
-  { value: topics.length, label: "huquqiy mavzu", icon: BookOpenCheck },
-  { value: scenarios.length, label: "interaktiv simulyator", icon: Gamepad2 },
-  { value: topics.reduce((n, t) => n + t.quiz.length, 0), label: "test savoli", icon: ListChecks },
-  { value: GRADES.length, label: "sinf (7–11)", icon: GraduationCap },
+  { value: readyExams.length, label: "tayyor test" },
+  { value: Object.values(questionBank).reduce((n, q) => n + q.length, 0), label: "izohli savol bazada" },
+  { value: topics.length, label: "interaktiv mavzu" },
+  { value: documents.length, label: "asosiy huquqiy hujjat" },
 ];
 
-const features = [
-  { icon: BookOpenCheck, title: "Sodda darslar", text: "Murakkab qonunlar o‘quvchi tilida: tushuntirish, misol va xulosa.", color: "bg-brand-100 text-brand-600 dark:bg-brand-400/15 dark:text-brand-300" },
-  { icon: Gamepad2, title: "Huquqiy simulyatorlar", text: "Real vaziyatda qaror qabul qil va oqibatini ko‘r.", color: "bg-brand-100 text-brand-600 dark:bg-brand-400/15 dark:text-brand-300" },
-  { icon: ListChecks, title: "Testlar va feedback", text: "Har bir javobdan keyin izoh — xatodan o‘rgan.", color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-400/15 dark:text-emerald-300" },
-  { icon: Trophy, title: "XP va nishonlar", text: "O‘rgan, ball to‘pla, nishonlar va haftalik challenge'larni yut.", color: "bg-amber-100 text-amber-600 dark:bg-amber-400/15 dark:text-amber-300" },
+const capabilities: { icon: LucideIcon; title: string; text: string; href: string; status?: string }[] = [
+  {
+    icon: ClipboardCheck,
+    title: "Milliy sertifikat",
+    text: `Rasmiy format: ${NATIONAL_FORMAT.total} topshiriq (Y-1, Y-2, O), ${NATIONAL_FORMAT.durationMinutes} daqiqa, taymer va avtomatik topshirish.`,
+    href: "/testlar/milliy-mock-1",
+  },
+  { icon: Landmark, title: "Mavzulashtirilgan testlar", text: "Davlat va huquq nazariyasi, Konstitutsiya — bo‘lim bo‘yicha chuqur tayyorgarlik.", href: "/testlar" },
+  { icon: Briefcase, title: "Attestatsiya", text: "Huquq o‘qituvchilari uchun attestatsiya variantlari.", href: "/testlar/attestatsiya-huquq-1", status: "Tayyorlanmoqda" },
+  { icon: Users, title: "O‘qituvchilar uchun", text: "Sinf natijalari paneli va dars materiallari.", href: "/haqida", status: "Rejada" },
+];
+
+const personas: { icon: LucideIcon; who: string; need: string; path: { label: string; href: string }[] }[] = [
+  {
+    icon: GraduationCap,
+    who: "Abituriyent",
+    need: "Milliy sertifikatga real formatda tayyorlanish",
+    path: [
+      { label: "Bepul diagnostika", href: "/testlar/diagnostika" },
+      { label: "Mock test", href: "/testlar/milliy-mock-1" },
+    ],
+  },
+  {
+    icon: Briefcase,
+    who: "Maktab o‘qituvchisi",
+    need: "Attestatsiyaga tayyorgarlik va dars uchun manbalar",
+    path: [
+      { label: "Qonunlar", href: "/qonunlar" },
+      { label: "Konstitutsiya testi", href: "/testlar/konstitutsiya-1" },
+    ],
+  },
+  {
+    icon: Users,
+    who: "Repetitor",
+    need: "O‘quvchilarga tayyor format va xatolar tahlili",
+    path: [
+      { label: "Test katalogi", href: "/testlar" },
+      { label: "Paketlar", href: "/testlar#paketlar" },
+    ],
+  },
+  {
+    icon: Scale,
+    who: "Yuridik talaba",
+    need: "Nazariya va qonunchilikni tez takrorlash",
+    path: [
+      { label: "Nazariya testi", href: "/testlar/nazariya-1" },
+      { label: "Huquqiy lug‘at", href: "/lugat" },
+    ],
+  },
+  {
+    icon: School,
+    who: "Maktab o‘quvchisi",
+    need: "Huquqni sodda tilda va hayotiy misollarda tushunish",
+    path: [
+      { label: "Mavzular", href: "/mavzular" },
+      { label: "Simulyatorlar", href: "/simulyatorlar" },
+    ],
+  },
+];
+
+const steps: { icon: LucideIcon; title: string; text: string }[] = [
+  { icon: FileSearch, title: "Diagnostika", text: "15 daqiqalik bepul test zaif bo‘limlarni ko‘rsatadi." },
+  { icon: Timer, title: "Imtihon rejimi", text: "Taymer, savollar navigatsiyasi, belgilash va avtomatik saqlash." },
+  { icon: LineChart, title: "Batafsil tahlil", text: "Topshiriq turi va spetsifikatsiya bo‘limlari bo‘yicha natija." },
+  { icon: RotateCcw, title: "Smart Review", text: "Barcha xatolar bir joyda — o‘zlashtirguningizcha mashq." },
 ];
 
 export default function HomePage() {
-  const popular = topics.filter((t) => t.popular).slice(0, 6);
+  const featured = exams.filter((e) => e.status === "available");
   const wallet = scenarios[0];
 
   return (
@@ -45,32 +114,27 @@ export default function HomePage() {
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
-        <div className="pointer-events-none absolute -top-40 left-1/2 h-[28rem] w-[60rem] -translate-x-1/2 rounded-full bg-brand-500/15 blur-3xl" />
-        <div className="container-page relative grid items-center gap-16 pt-12 pb-20 sm:pt-20 lg:grid-cols-[1.1fr_1fr] lg:pb-28">
+        <div className="pointer-events-none absolute -top-40 left-1/2 h-[28rem] w-[60rem] -translate-x-1/2 rounded-full bg-brand-500/10 blur-3xl" />
+        <div className="container-page relative grid items-center gap-14 pt-12 pb-16 sm:pt-20 lg:grid-cols-[1.05fr_1fr] lg:pb-24">
           <div>
-            <p className="eyebrow animate-fade-up">
-              <Sparkles className="h-3.5 w-3.5" /> O‘zbekiston maktab o‘quvchilari uchun
-            </p>
-            <h1 className="mt-6 text-5xl leading-[1.05] font-extrabold text-navy-900 animate-fade-up [animation-delay:60ms] sm:text-6xl lg:text-7xl dark:text-white">
-              Huquqingni bil.{" "}
-              <span className="text-brand-700 dark:text-brand-400">
-                Kelajagingni himoya qil.
-              </span>
+            <p className="eyebrow animate-fade-up">Huquq fanidan imtihonga tayyorgarlik platformasi</p>
+            <h1 className="mt-6 text-[2.6rem] leading-[1.05] font-extrabold text-navy-900 animate-fade-up [animation-delay:60ms] sm:text-6xl dark:text-white">
+              Huquqni bil. <span className="text-brand-700 dark:text-brand-400">Imtihonga ishonch bilan tayyorlan.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-navy-600 animate-fade-up [animation-delay:120ms] dark:text-navy-300">
-              HuquqLab — huquqni quruq matn orqali emas, sodda darslar, hayotiy vaziyatlar, interaktiv simulyatorlar va testlar orqali
-              o‘rgatuvchi platforma. 7–11-sinf o‘quvchilari uchun, o‘zbek tilida va bepul.
+              HuquqLab — huquq fanini o‘rganish, milliy sertifikat formatida test topshirish va natijangizni bo‘limma-bo‘lim tahlil qilish uchun yagona
+              platforma. Har bir savolga izoh va rasmiy manba.
             </p>
             <div className="mt-8 flex flex-col gap-3 animate-fade-up [animation-delay:180ms] sm:flex-row">
-              <ButtonLink href="/mavzular" size="lg">
-                O‘rganishni boshlash <ArrowRight className="h-5 w-5" />
+              <ButtonLink href="/testlar/diagnostika" size="lg">
+                Bepul testni boshlash <ArrowRight className="h-5 w-5" />
               </ButtonLink>
-              <ButtonLink href={`/simulyatorlar/${wallet.id}`} variant="secondary" size="lg">
-                <Gamepad2 className="h-5 w-5" /> Simulyatorni sinash
+              <ButtonLink href="/testlar" variant="secondary" size="lg">
+                Premium testlar
               </ButtonLink>
             </div>
             <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium text-navy-600 animate-fade-up [animation-delay:240ms] dark:text-navy-400">
-              {["Ro‘yxatdan o‘tishsiz", "Progress saqlanadi", "Telefonda qulay"].map((t) => (
+              {["Rasmiy spetsifikatsiya formati", "Ro‘yxatdan o‘tishsiz boshlash", "Telefonda qulay"].map((t) => (
                 <li key={t} className="flex items-center gap-1.5">
                   <BadgeCheck className="h-4 w-4 text-emerald-500" /> {t}
                 </li>
@@ -78,171 +142,147 @@ export default function HomePage() {
             </ul>
           </div>
           <div className="animate-fade-up [animation-delay:200ms]">
-            <HeroVisual />
+            <ExamPreviewVisual />
           </div>
         </div>
       </section>
 
-      {/* STATISTIKA */}
+      {/* STATISTIKA — faqat real ma'lumot */}
       <section className="container-page">
-        <div className="card grid grid-cols-2 divide-navy-200/70 p-2 sm:p-4 lg:grid-cols-4 lg:divide-x dark:divide-white/[0.06]">
+        <dl className="card grid grid-cols-2 divide-navy-100 sm:grid-cols-4 sm:divide-x dark:divide-white/[0.06]">
           {stats.map((s) => (
-            <div key={s.label} className="flex items-center gap-4 p-4">
-              <span className="hidden h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-50 text-brand-600 sm:grid dark:bg-brand-400/10 dark:text-brand-300">
-                <s.icon className="h-6 w-6" />
-              </span>
-              <div>
-                <p className="font-display text-3xl font-extrabold text-navy-900 tabular-nums dark:text-white">{s.value}</p>
-                <p className="text-sm text-navy-500 dark:text-navy-400">{s.label}</p>
-              </div>
+            <div key={s.label} className="px-6 py-6 text-center">
+              <dt className="order-2 text-sm text-navy-500 dark:text-navy-400">{s.label}</dt>
+              <dd className="font-display text-3xl font-extrabold text-navy-900 dark:text-white">{s.value}</dd>
             </div>
           ))}
-        </div>
+        </dl>
       </section>
 
-      {/* OMMABOP MAVZULAR */}
+      {/* IMKONIYATLAR */}
       <section className="container-page mt-24">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <p className="eyebrow">Ommabop mavzular</p>
-            <h2 className="mt-3 text-3xl font-extrabold text-navy-900 sm:text-4xl dark:text-white">Eng ko‘p kerak bo‘ladigan bilimlar</h2>
-            <p className="mt-2 max-w-xl text-navy-600 dark:text-navy-400">Maktab va kundalik hayotda har kuni duch keladigan huquqiy vaziyatlar.</p>
-          </div>
-          <Link href="/mavzular" className="inline-flex items-center gap-1.5 font-semibold text-brand-600 hover:gap-2.5 transition-all dark:text-brand-400">
-            Barcha mavzular <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {popular.map((t, i) => (
-            <TopicCard key={t.id} topic={t} index={i} />
-          ))}
-        </div>
-        <div className="mt-6 flex flex-wrap gap-2">
-          {categories.map((c) => (
-            <Link
-              key={c.id}
-              href={`/mavzular?kategoriya=${c.id}`}
-              className="flex items-center gap-2 rounded-full border border-navy-200 bg-white py-1.5 pr-4 pl-1.5 text-sm font-medium text-navy-700 transition hover:-translate-y-0.5 hover:border-navy-300 hover:shadow-md dark:border-white/10 dark:bg-white/[0.03] dark:text-navy-300"
-            >
-              <CategoryIcon categoryId={c.id} size="sm" className="h-7 w-7 rounded-full" />
-              {c.name}
+        <SectionTitle eyebrow="Imkoniyatlar" title="Imtihonga tayyorgarlikning barcha bosqichi bir joyda" />
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {capabilities.map((c) => (
+            <Link key={c.title} href={c.href} className="card group flex flex-col p-6 transition hover:-translate-y-0.5 hover:shadow-lg">
+              <div className="flex items-start justify-between">
+                <span className="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-700 dark:bg-brand-400/10 dark:text-brand-300">
+                  <c.icon className="h-5 w-5" />
+                </span>
+                {c.status && <span className="rounded-full bg-navy-100 px-2.5 py-1 text-xs font-semibold text-navy-600 dark:bg-white/10 dark:text-navy-300">{c.status}</span>}
+              </div>
+              <h3 className="mt-5 font-display text-lg font-bold text-navy-900 dark:text-white">{c.title}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-navy-600 dark:text-navy-400">{c.text}</p>
             </Link>
           ))}
-        </div>
-      </section>
-
-      {/* SIMULYATOR PREVIEW */}
-      <section className="mt-24 bg-gradient-to-b from-transparent via-brand-50/70 to-transparent py-16 dark:via-brand-500/[0.04]">
-        <div className="container-page grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <p className="eyebrow">
-              <Gamepad2 className="h-3.5 w-3.5" /> Interaktiv simulyator
-            </p>
-            <h2 className="mt-3 text-3xl font-extrabold text-navy-900 sm:text-4xl dark:text-white">Qonunni o‘qib emas, qaror qabul qilib o‘rgan</h2>
-            <p className="mt-4 text-lg text-navy-600 dark:text-navy-300">
-              Har bir simulyator — maktab hayotidagi real vaziyat. Sen tanlov qilasan, voqea rivojlanadi va har bir qaror uchun huquqiy
-              hamda axloqiy izoh olasan. Hoziroq sinab ko‘r — variantlardan birini tanla.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {scenarios.map((s) => (
-                <li key={s.id}>
-                  <Link
-                    href={`/simulyatorlar/${s.id}`}
-                    className="group flex items-center gap-3 rounded-2xl p-2 transition hover:bg-white dark:hover:bg-white/5"
-                  >
-                    <span className="grid h-11 w-11 place-items-center rounded-xl bg-white text-xl shadow-sm dark:bg-white/10">{s.emoji}</span>
-                    <span className="flex-1">
-                      <span className="block font-semibold text-navy-900 dark:text-white">{s.title}</span>
-                      <span className="block text-sm text-navy-500 dark:text-navy-400">{s.tagline}</span>
-                    </span>
-                    <ArrowRight className="h-4 w-4 text-navy-400 transition group-hover:translate-x-1 group-hover:text-brand-600" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <SimulatorPreview scenario={wallet} />
         </div>
       </section>
 
       {/* QANDAY ISHLAYDI */}
+      <section className="mt-24 border-y border-navy-200/70 bg-white/60 py-16 dark:border-white/[0.06] dark:bg-white/[0.02]">
+        <div className="container-page">
+          <SectionTitle eyebrow="Qanday ishlaydi" title="Bilimni o‘lchang, xatoni toping, mustahkamlang" />
+          <ol className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {steps.map((s, i) => (
+              <li key={s.title} className="relative">
+                <span className="font-display text-sm font-bold text-brand-700 dark:text-brand-400">0{i + 1}</span>
+                <div className="mt-2 flex items-center gap-2">
+                  <s.icon className="h-5 w-5 text-navy-400" />
+                  <h3 className="font-display text-lg font-bold text-navy-900 dark:text-white">{s.title}</h3>
+                </div>
+                <p className="mt-1.5 text-sm leading-relaxed text-navy-600 dark:text-navy-400">{s.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* TESTLAR */}
       <section className="container-page mt-24">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="eyebrow">Platforma imkoniyatlari</p>
-          <h2 className="mt-3 text-3xl font-extrabold text-navy-900 sm:text-4xl dark:text-white">O‘rganish — qiziqarli, bilim — mustahkam</h2>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <SectionTitle eyebrow="Test Market" title="Tayyor testlar" />
+          <ButtonLink href="/testlar" variant="secondary">
+            Barcha testlar va paketlar <ArrowRight className="h-4 w-4" />
+          </ButtonLink>
         </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map((f, i) => (
-            <div key={f.title} className="card p-6 transition hover:-translate-y-1 hover:shadow-lg">
-              <span className={`grid h-12 w-12 place-items-center rounded-2xl ${f.color}`}>
-                <f.icon className="h-6 w-6" />
-              </span>
-              <p className="mt-5 text-xs font-bold text-navy-400">0{i + 1}</p>
-              <h3 className="mt-1 text-lg font-bold text-navy-900 dark:text-white">{f.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-navy-600 dark:text-navy-400">{f.text}</p>
+          {featured.map((e, i) => (
+            <ExamCard key={e.id} exam={e} index={i} ownership={e.access === "free" ? "free" : "locked"} />
+          ))}
+        </div>
+      </section>
+
+      {/* KIMLAR UCHUN */}
+      <section className="container-page mt-24">
+        <SectionTitle eyebrow="Kimlar uchun" title="Har bir foydalanuvchi uchun o‘z yo‘li" />
+        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+          {personas.map((p) => (
+            <div key={p.who} className="card flex flex-col p-5">
+              <p.icon className="h-6 w-6 text-brand-600 dark:text-brand-400" />
+              <h3 className="mt-4 font-display font-bold text-navy-900 dark:text-white">{p.who}</h3>
+              <p className="mt-1 text-sm text-navy-600 dark:text-navy-400">{p.need}</p>
+              <div className="mt-4 flex flex-wrap gap-1.5 pt-1">
+                {p.path.map((l) => (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    className="rounded-full bg-navy-100 px-2.5 py-1 text-xs font-semibold text-navy-700 transition hover:bg-brand-600 hover:text-white dark:bg-white/[0.06] dark:text-navy-200"
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* GAMIFICATION */}
-      <section className="container-page mt-24 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
-        <WeeklyChallengeCard />
-        <div className="card p-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-navy-900 dark:text-white">Yutib olish mumkin bo‘lgan nishonlar</h3>
-            <Link href="/profil" className="text-sm font-semibold text-brand-600 dark:text-brand-400">
-              Progressim →
-            </Link>
-          </div>
-          <div className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-5">
-            {badges.map((b) => (
-              <div key={b.id} title={b.description} className="flex flex-col items-center rounded-2xl bg-navy-50 p-3 text-center transition hover:scale-105 dark:bg-white/[0.03]">
-                <span className="text-3xl">{b.emoji}</span>
-                <span className="mt-1.5 text-[11px] leading-tight font-semibold text-navy-600 dark:text-navy-300">{b.name}</span>
-              </div>
+      {/* O'RGANISH */}
+      <section className="container-page mt-24 grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
+        <div>
+          <SectionTitle eyebrow="O‘rganish" title="Testdan oldin — tushunib oling" />
+          <p className="mt-4 max-w-lg text-navy-600 dark:text-navy-300">
+            Sodda tildagi darslar, hayotiy vaziyat simulyatorlari, Konstitutsiya va kodekslarga yo‘l ko‘rsatkich hamda huquqiy lug‘at — barchasi bepul.
+          </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {[
+              { href: "/mavzular", icon: BookOpenCheck, label: `${topics.length} ta mavzu` },
+              { href: "/simulyatorlar", icon: Gamepad2, label: `${scenarios.length} ta simulyator` },
+              { href: "/qonunlar", icon: Landmark, label: `${documents.length} ta hujjat` },
+              { href: "/lugat", icon: ListChecks, label: "Huquqiy lug‘at" },
+            ].map((l) => (
+              <Link key={l.href} href={l.href} className="card flex items-center gap-3 p-4 font-semibold text-navy-900 transition hover:border-brand-400 dark:text-white">
+                <l.icon className="h-5 w-5 text-brand-600 dark:text-brand-400" /> {l.label}
+                <ArrowRight className="ml-auto h-4 w-4 text-navy-400" />
+              </Link>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* HUQUQIY ANIQLIK */}
-      <section className="container-page mt-24">
-        <div className="card grid items-center gap-8 p-8 sm:p-10 lg:grid-cols-[auto_1fr_auto]">
-          <span className="grid h-16 w-16 place-items-center rounded-3xl bg-emerald-100 text-emerald-600 dark:bg-emerald-400/15 dark:text-emerald-300">
-            <ShieldCheck className="h-8 w-8" />
-          </span>
-          <div>
-            <h2 className="text-2xl font-extrabold text-navy-900 dark:text-white">Ishonchli manbalarga asoslangan</h2>
-            <p className="mt-2 text-navy-600 dark:text-navy-400">
-              Kontent O‘zbekiston qonunchiligiga tayanadi. Biz qonun va moddalarni uydirmaymiz: rasmiy manba bilan solishtirilmagan har bir
-              tafsilot «Tekshirish talab etiladi» deb ochiq belgilanadi.
-            </p>
-          </div>
-          <ButtonLink href="/haqida" variant="secondary">
-            Batafsil
-          </ButtonLink>
-        </div>
+        <SimulatorPreview scenario={wallet} />
       </section>
 
       {/* CTA */}
       <section className="container-page mt-24">
-        <div className="relative overflow-hidden rounded-[2rem] bg-navy-900 px-6 py-14 text-center text-white shadow-2xl shadow-navy-900/25 dark:bg-navy-800/60 dark:ring-1 dark:ring-white/10 sm:px-12">
-          <div className="bg-grid pointer-events-none absolute inset-0 opacity-20 [mask-image:radial-gradient(circle,black,transparent_70%)]" />
-          <div className="relative">
-            <h2 className="mx-auto max-w-2xl text-3xl font-extrabold sm:text-4xl">Birinchi mavzuni 10 daqiqada o‘rgan va ilk nishoningni ol</h2>
-            <p className="mx-auto mt-3 max-w-xl text-white/80">Ro‘yxatdan o‘tish shart emas — progressing shu qurilmada saqlanadi.</p>
-            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <Link href="/mavzular" className="inline-flex h-13 items-center justify-center gap-2 rounded-2xl bg-brand-400 px-7 font-bold text-navy-950 transition hover:bg-brand-300">
-                O‘rganishni boshlash <ArrowRight className="h-5 w-5" />
-              </Link>
-              <Link href="/testlar" className="inline-flex h-13 items-center justify-center gap-2 rounded-2xl border border-white/30 px-7 font-bold text-white transition hover:bg-white/10">
-                Tezkor test
-              </Link>
-            </div>
+        <div className="relative overflow-hidden rounded-3xl bg-navy-900 px-6 py-12 text-center text-white sm:px-12 dark:bg-navy-800/60 dark:ring-1 dark:ring-white/10">
+          <div className="bg-grid pointer-events-none absolute inset-0 opacity-10" />
+          <h2 className="relative text-3xl font-extrabold sm:text-4xl">Qaysi bo‘limlarni takrorlash kerak?</h2>
+          <p className="relative mx-auto mt-3 max-w-xl text-navy-200">15 daqiqalik bepul diagnostik test buni aniq ko‘rsatadi. Ro‘yxatdan o‘tish shart emas.</p>
+          <div className="relative mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <ButtonLink href="/testlar/diagnostika" size="lg" className={cn("bg-white text-navy-900 hover:bg-navy-100 dark:bg-white dark:text-navy-950")}>
+              Bepul testni boshlash <ArrowRight className="h-5 w-5" />
+            </ButtonLink>
           </div>
         </div>
       </section>
     </>
+  );
+}
+
+function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
+  return (
+    <div>
+      <p className="eyebrow">{eyebrow}</p>
+      <h2 className="mt-4 max-w-2xl text-3xl font-extrabold text-navy-900 sm:text-4xl dark:text-white">{title}</h2>
+    </div>
   );
 }

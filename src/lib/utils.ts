@@ -18,12 +18,16 @@ export function normalizeSearch(input: string) {
   return input.toLowerCase().replace(/[‘’'ʻʼ`]/g, "");
 }
 
+const MONTHS = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"];
+
+/**
+ * «2023-yil 30-aprel». Intl'ning uz-UZ lokali brauzerlarda turlicha
+ * («2023 M04 30») chiqadi va server/klient farqi hydration xatosiga olib keladi.
+ */
 export function formatDate(iso: string) {
-  try {
-    return new Date(iso).toLocaleDateString("uz-UZ", { day: "numeric", month: "long", year: "numeric" });
-  } catch {
-    return iso;
-  }
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  if (!m) return iso;
+  return `${m[1]}-yil ${Number(m[3])}-${MONTHS[Number(m[2]) - 1]}`;
 }
 
 export const difficultyLabel: Record<string, string> = {

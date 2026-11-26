@@ -5,14 +5,24 @@ const groups = [
   {
     title: "O‘rganish",
     links: [
+      { href: "/testlar", label: "Test Market" },
+      { href: "/testlar/xatolar", label: "Xatolar ustida ishlash" },
       { href: "/mavzular", label: "Barcha mavzular" },
       { href: "/simulyatorlar", label: "Simulyatorlar" },
-      { href: "/testlar", label: "Testlar" },
+    ],
+  },
+  {
+    title: "Manbalar",
+    links: [
+      { href: "/qonunlar", label: "Qonunlar" },
+      { href: "/lugat", label: "Huquqiy lug‘at" },
+      { href: "/kutubxona", label: "Darsliklar" },
     ],
   },
   {
     title: "Platforma",
     links: [
+      { href: "/mening-testlarim", label: "Mening testlarim" },
       { href: "/profil", label: "Mening progressim" },
       { href: "/admin", label: "O‘qituvchi paneli" },
       { href: "/haqida", label: "Loyiha haqida" },
@@ -23,7 +33,7 @@ const groups = [
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-navy-200/70 bg-white/60 dark:border-white/[0.06] dark:bg-white/[0.02]">
-      <div className="container-page grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1.4fr]">
+      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1.4fr]">
         <div>
           <Logo />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-navy-500 dark:text-navy-400">

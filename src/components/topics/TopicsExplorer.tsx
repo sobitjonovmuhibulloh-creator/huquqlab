@@ -184,7 +184,7 @@ export function TopicsExplorer() {
   );
 }
 
-function Chip({
+export function Chip({
   active,
   onClick,
   children,

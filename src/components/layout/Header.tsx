@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, Moon, Sun, X, Zap } from "lucide-react";
+import { Menu, Moon, Search, Sun, X, Zap } from "lucide-react";
 import { useProgress } from "@/components/providers/ProgressProvider";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { Logo } from "@/components/ui/Logo";
@@ -11,12 +11,13 @@ import { getLevel } from "@/lib/gamification";
 import { cn } from "@/lib/utils";
 
 export const navItems = [
+  { href: "/testlar", label: "Testlar" },
   { href: "/mavzular", label: "Mavzular" },
   { href: "/simulyatorlar", label: "Simulyatorlar" },
-  { href: "/testlar", label: "Testlar" },
+  { href: "/qonunlar", label: "Qonunlar" },
+  { href: "/lugat", label: "Lug‘at" },
   { href: "/kutubxona", label: "Kutubxona" },
-  { href: "/profil", label: "Progress" },
-  { href: "/admin", label: "O‘qituvchi" },
+  { href: "/mening-testlarim", label: "Kabinet" },
 ];
 
 export function Header() {
@@ -78,6 +79,16 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => window.dispatchEvent(new Event("huquqlab:search"))}
+            className="flex h-10 items-center gap-2 rounded-xl px-2.5 text-navy-600 transition hover:bg-navy-100 xl:border xl:border-navy-200 xl:px-3 dark:text-navy-300 dark:hover:bg-white/10 xl:dark:border-white/10"
+            aria-label="Qidirish (Ctrl+K)"
+            title="Qidirish (Ctrl+K)"
+          >
+            <Search className="h-5 w-5 xl:h-4 xl:w-4" />
+            <span className="hidden text-sm xl:inline">Qidirish</span>
+            <kbd className="hidden rounded-md bg-navy-100 px-1.5 py-0.5 font-sans text-[11px] font-semibold text-navy-500 xl:inline dark:bg-white/10 dark:text-navy-400">Ctrl K</kbd>
+          </button>
           <Link
             href="/profil"
             className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm font-bold text-amber-700 transition hover:bg-amber-100 dark:border-amber-400/20 dark:bg-amber-400/10 dark:text-amber-300"

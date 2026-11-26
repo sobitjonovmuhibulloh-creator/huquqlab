@@ -26,6 +26,7 @@ import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { EmptyState, LegalStatusBadge, Pill, Skeleton } from "@/components/ui/misc";
 import { categoryById } from "@/data/categories";
 import { cn, difficultyLabel, formatDate } from "@/lib/utils";
+import { findDocument } from "@/lib/legal";
 
 const sections = [
   { id: "kirish", label: "Kirish", icon: Sparkles },
@@ -211,6 +212,16 @@ export function TopicView({ slug }: { slug: string }) {
                     <LegalStatusBadge status={l.status} />
                   </div>
                   <p className="mt-1.5 text-sm leading-relaxed text-navy-600 dark:text-navy-400">{l.summary}</p>
+                  {(() => {
+                    const doc = findDocument(l.document);
+                    return (
+                      doc && (
+                        <Link href={`/qonunlar/${doc.slug}`} className="mt-2 inline-flex text-sm font-semibold text-brand-600 hover:underline dark:text-brand-400">
+                          {doc.shortTitle} — sodda izoh va rasmiy matn →
+                        </Link>
+                      )
+                    );
+                  })()}
                 </li>
               ))}
             </ul>

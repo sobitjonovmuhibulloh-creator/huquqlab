@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Manrope } from "next/font/google";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { SearchDialog } from "@/components/layout/SearchDialog";
 import { Providers } from "@/components/providers/Providers";
 import { themeInitScript } from "@/components/providers/ThemeProvider";
 import { SITE_URL } from "@/lib/site";
@@ -32,7 +33,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="uz" suppressHydrationWarning>
+    <html lang="uz" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </main>
             <Footer />
           </div>
+          <SearchDialog />
         </Providers>
       </body>
     </html>

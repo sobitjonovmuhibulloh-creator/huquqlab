@@ -12,7 +12,8 @@ cp .env.example .env.local   # so‘ng ADMIN_PASSWORD va ADMIN_SESSION_SECRET ni
 npm run dev        # http://localhost:3100
 npm run build      # production build
 npm run start      # production server (http://localhost:3100)
-npm run check      # kontent, simulyator grafi va XP mantiqini tekshirish
+npm run check      # kontent, imtihon, to'lov xavfsizligi va import tekshiruvlari
+npm run check:db   # Supabase migratsiyalari PostgreSQL'da (PGlite): RLS, atomar import
 npm run lint
 ```
 
@@ -24,9 +25,15 @@ npm run lint
 | Mavzular | `/mavzular` | Sinf (7–11), kategoriya, qidiruv, o‘rganilgan/o‘rganilmagan filtri (filtrlar URL’da saqlanadi) |
 | Mavzu sahifasi | `/mavzular/[slug]` | Kirish, tushuntirish, tushunchalar, huquqiy asos, misol, vaziyat tahlili, xulosa, test |
 | Simulyatorlar | `/simulyatorlar` | «Topilgan hamyon», «Sinf guruhidagi masxara», «Nosoz quloqchin» |
-| Testlar | `/testlar` | Mavzu testlari va 10 savollik tasodifiy tezkor test |
+| Test Market | `/testlar` | Milliy sertifikat formatidagi mock (45/90), mavzulashtirilgan va Konstitutsiya testlari, paketlar, mavzu testlari |
+| Imtihon rejimi | `/testlar/[id]/yechish` | Taymer, navigator, belgilash, avtosaqlash, avtomatik topshirish |
+| Natija va Smart Review | `/testlar/natija/[id]`, `/testlar/xatolar` | Bo‘limlar bo‘yicha tahlil, izoh va manbalar, xatolar ustida mashq |
+| Kabinet | `/mening-testlarim` | Ochiq testlar, kreditlar, xaridlar va urinishlar tarixi |
+| Qonunlar va lug‘at | `/qonunlar`, `/lugat` | Asosiy hujjatlar (lex.uz havolalari bilan) va huquqiy atamalar |
 | Progress | `/profil` | XP, daraja, nishonlar, haftalik challenge, faollik |
-| O‘qituvchi paneli | `/admin` | Mavzu CRUD, test savollari, simulyatorlar tekshiruvi, JSON import/eksport |
+| O‘qituvchi paneli | `/admin` | Mavzu CRUD, test savollari, simulyatorlar tekshiruvi, narxlar, JSON import/eksport |
+
+Batafsil: [docs/DATABASE.md](docs/DATABASE.md) (Supabase, import formati, xavfsizlik), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (arxitektura, to‘lov integratsiyasi, yo‘l xaritasi) va [docs/COMPETITOR_ANALYSIS.md](docs/COMPETITOR_ANALYSIS.md).
 
 ## Arxitektura
 
@@ -51,14 +58,11 @@ scripts/check-content.ts
 
 `src/data/simulators.ts` ga yangi `Scenario` obyekti qo‘shing. Har bir qadamda tanlovlar bor; har bir tanlov `points`, `tone`, huquqiy va axloqiy izoh beradi va `nextStepId` (keyingi qadam) yoki `endingId` (yakun) ga ega. Player, ball hisoblash, maksimal ball va mukofotlar avtomatik ishlaydi. `npm run check` grafni tekshiradi.
 
-### Ma’lumotlar bazasiga o‘tish
+### Ma’lumotlar bazasi
 
-Hozir kontent `src/data` dan, admin o‘zgarishlari va progress esa `localStorage` dan olinadi. Barcha kontent so‘rovlari `ContentRepository` interfeysi (`src/lib/repository.ts`) orqali o‘tadi:
-
-1. `npm i -D prisma && npm i @prisma/client`, `.env` ga `DATABASE_URL`.
-2. `npx prisma migrate dev --name init`.
-3. `PrismaContentRepository` (API route orqali) yozib, `contentRepository` ni almashtiring.
-4. Progress uchun `ProgressProvider` dagi `readJSON/writeJSON` ni API chaqiruvlariga almashtiring.
+- **Testlar va savollar banki** — Supabase (PostgreSQL): `supabase/migrations`, server kodi `src/server/db.ts` va `src/server/exam-repository.ts`. Ulash, import formati va RLS: [docs/DATABASE.md](docs/DATABASE.md). Baza ulanmagan bo‘lsa, sayt `src/server/questions` dagi testlar bilan ishlaydi.
+- **Mavzu darslari** hozircha `src/data` dan, admin o‘zgarishlari va progress esa `localStorage` dan olinadi (`ContentRepository`, `src/lib/repository.ts`). Ularni ham Supabase’ga ko‘chirish — keyingi bosqich.
+- `prisma/schema.prisma` — eski reja, ishlatilmaydi. Amaldagi sxema — `supabase/migrations`.
 
 UI komponentlari o‘zgarmaydi.
 

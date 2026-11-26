@@ -217,3 +217,42 @@ export interface Book {
   /** Manzil oxirgi marta tekshirilgan sana */
   checkedAt: string;
 }
+
+/* ---------------- Qonunlar (huquqiy hujjatlar) ---------------- */
+
+export type LegalDocumentType = "konstitutsiya" | "kodeks" | "qonun" | "xalqaro";
+
+export interface LegalKeyPoint {
+  text: string;
+  status: LegalStatus;
+}
+
+export interface LegalDocument {
+  slug: string;
+  title: string;
+  shortTitle: string;
+  type: LegalDocumentType;
+  /** Hujjat raqami, masalan «O‘RQ-637» */
+  number?: string;
+  /** Qabul qilingan sana — faqat rasmiy manbada tekshirilgan bo'lsa */
+  adoptedAt?: string;
+  effectiveAt?: string;
+  /** lex.uz'dagi hujjat ID'si — faqat tekshirilganlari; bo'lmasa qidiruv havolasi beriladi */
+  lexId?: string;
+  categoryIds: CategoryId[];
+  grades: Grade[];
+  /** Hujjat nimani tartibga soladi — 1–2 jumla */
+  summary: string;
+  /** O'quvchi uchun eng muhim qoidalar */
+  keyPoints: LegalKeyPoint[];
+  /** Mavzulardagi legalBasis.document bilan moslash uchun kalit so'zlar (normalizeSearch ko'rinishida) */
+  match: string[];
+  checkedAt: string;
+}
+
+export interface GlossaryTerm {
+  term: string;
+  definition: string;
+  /** Atama uchraydigan mavzular (slug) */
+  topicSlugs: string[];
+}

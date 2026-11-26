@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   // Yuqori papkalarda boshqa package-lock.json bo'lgani uchun loyiha ildizini aniq ko'rsatamiz
   outputFileTracingRoot: path.join(__dirname),
   poweredByHeader: false,
+  // Lokal PGlite (faqat development) WASM fayllarini o'zi yuklaydi — bundle qilinmasin
+  serverExternalPackages: ["@electric-sql/pglite"],
   async headers() {
     return [
       {

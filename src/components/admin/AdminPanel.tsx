@@ -17,6 +17,10 @@ import {
   Search,
   Trash2,
   Upload,
+  Wallet,
+  ClipboardList,
+  FileSpreadsheet,
+  Library,
 } from "lucide-react";
 import { useContent } from "@/components/providers/ContentProvider";
 import { useToast } from "@/components/providers/ToastProvider";
@@ -28,13 +32,21 @@ import { categoryById } from "@/data/categories";
 import { countEndings, countSteps, getMaxScore, validateScenario } from "@/lib/scenario";
 import { cn, formatDate, normalizeSearch } from "@/lib/utils";
 import type { Topic } from "@/types";
+import { ImportWizard } from "./ImportWizard";
+import { PricingManager } from "./PricingManager";
+import { QuestionBank } from "./QuestionBank";
 import { QuestionManager } from "./QuestionManager";
+import { TestsManager } from "./TestsManager";
 import { TopicEditor } from "./TopicEditor";
 
 const tabs = [
   { id: "topics", label: "Mavzular", icon: LayoutList },
-  { id: "questions", label: "Test savollari", icon: FileQuestion },
+  { id: "questions", label: "Mavzu savollari", icon: FileQuestion },
+  { id: "exams", label: "Testlar bazasi", icon: ClipboardList },
+  { id: "import", label: "Import (Excel/CSV)", icon: FileSpreadsheet },
+  { id: "bank", label: "Savollar banki", icon: Library },
   { id: "simulators", label: "Simulyatorlar", icon: Gamepad2 },
+  { id: "pricing", label: "Narxlar", icon: Wallet },
   { id: "content", label: "Kontent boshqaruvi", icon: Database },
 ] as const;
 
@@ -48,8 +60,8 @@ export function AdminPanel() {
       <div className="mb-6 flex items-start gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-900 dark:border-sky-400/20 dark:bg-sky-400/[0.06] dark:text-sky-200">
         <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
         <p>
-          <b>Demo rejim.</b> Panel parol bilan himoyalangan, lekin kontent o‘zgarishlari hozircha faqat shu brauzerda (localStorage)
-          saqlanadi va boshqa foydalanuvchilarga ko‘rinmaydi. Umumiy kontent uchun PostgreSQL + Prisma ulanadi.
+          <b>Diqqat.</b> «Mavzular» va «Mavzu savollari»dagi o‘zgarishlar hozircha faqat shu brauzerda (localStorage) saqlanadi. «Testlar bazasi»,
+          «Import» va «Savollar banki» esa Supabase ma’lumotlar bazasi bilan ishlaydi — baza ulanmagan bo‘lsa, bu haqda alohida xabar chiqadi.
         </p>
       </div>
 
@@ -78,6 +90,10 @@ export function AdminPanel() {
         {tab === "topics" && <TopicManager />}
         {tab === "questions" && <QuestionManager />}
         {tab === "simulators" && <SimulatorList />}
+        {tab === "exams" && <TestsManager />}
+        {tab === "import" && <ImportWizard onViewTests={() => setTab("exams")} />}
+        {tab === "bank" && <QuestionBank />}
+        {tab === "pricing" && <PricingManager />}
         {tab === "content" && <ContentTools />}
       </div>
     </div>
