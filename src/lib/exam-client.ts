@@ -154,3 +154,57 @@ export function formatDuration(seconds: number) {
   const ss = String(s).padStart(2, "0");
   return h ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
 }
+
+/* ---------------- Statistika va tavsiyalar (faqat haqiqiy natijalardan) ---------------- */
+
+export interface LearnerStats {
+  attempts: number;
+  testsTaken: number;
+  averagePct: number;
+  bestPct: number;
+  last7Days: number;
+  /** Eng zaif bo'limlar: kamida 3 ta savol bo'yicha, foizi eng past */
+  weak: { label: string; correct: number; total: number; pct: number }[];
+}
+
+export function learnerStats(results: ExamResult[], now = Date.now()): LearnerStats | null {
+  if (results.length === 0) return null;
+  const sections = new Map<string, { label: string; correct: number; total: number }>();
+  for (const r of results)
+    for (const s of r.bySection) {
+      const cur = sections.get(s.label) ?? { label: s.label, correct: 0, total: 0 };
+      cur.correct += s.correct;
+      cur.total += s.total;
+      sections.set(s.label, cur);
+    }
+  const pcts = results.map((r) => percent(r.correct, r.total));
+  return {
+    attempts: results.length,
+    testsTaken: new Set(results.map((r) => r.examId)).size,
+    averagePct: Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length),
+    bestPct: Math.max(...pcts),
+    last7Days: results.filter((r) => now - Date.parse(r.finishedAt) < 7 * 86_400_000).length,
+    weak: [...sections.values()]
+      .filter((s) => s.total >= 3)
+      .map((s) => ({ ...s, pct: percent(s.correct, s.total) }))
+      .filter((s) => s.pct < 70)
+      .sort((a, b) => a.pct - b.pct)
+      .slice(0, 3),
+  };
+}
+
+/**
+ * Keyingi testlar: hali topshirilmaganlar; avval oxirgi testning kategoriyasidagilar,
+ * keyin bepul, keyin ochiq (sotib olingan) testlar.
+ */
+export function recommendTests<T extends { id: string; category: string; access: string; status: string }>(catalog: T[], results: ExamResult[], owned: string[], limit = 3): T[] {
+  const taken = new Set(results.map((r) => r.examId));
+  const lastCategory = catalog.find((e) => e.id === results[0]?.examId)?.category;
+  const score = (e: T) => (e.category === lastCategory ? 4 : 0) + (e.access === "free" ? 2 : 0) + (owned.includes(e.id) ? 1 : 0);
+  return catalog
+    .filter((e) => e.status === "available" && !taken.has(e.id))
+    .map((e, i) => ({ e, s: score(e), i }))
+    .sort((a, b) => b.s - a.s || a.i - b.i)
+    .slice(0, limit)
+    .map((x) => x.e);
+}

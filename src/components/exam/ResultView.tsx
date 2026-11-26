@@ -11,6 +11,7 @@ import { formatDuration, loadResults, percent } from "@/lib/exam-client";
 import { cn, formatDate } from "@/lib/utils";
 import type { ExamResult, QuestionKind } from "@/types/exam";
 import { kindLabel, QuestionBody } from "./QuestionBody";
+import { RecommendedTests } from "./RecommendedTests";
 
 type Filter = "all" | "wrong" | "correct" | "empty";
 
@@ -205,6 +206,9 @@ export function ResultView({ attemptId }: { attemptId: string }) {
             </ol>
           )}
         </section>
+      </div>
+      <div className="container-page">
+        <RecommendedTests title="Tavsiya etilgan keyingi testlar" />
       </div>
     </div>
   );

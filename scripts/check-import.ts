@@ -7,7 +7,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { readSheet } from "read-excel-file/node";
 import writeExcelFile from "write-excel-file/node";
-import { decodeUtf8, detectFormat, parseCsv, templateCsv, validateImport, type IssueCode } from "../src/lib/test-import";
+import { autoMapping, decodeUtf8, detectFormat, parseCsv, templateCsv, validateImport, validateWorkbook, type IssueCode } from "../src/lib/test-import";
 import { isCorrect, toPublic } from "../src/lib/grading";
 import { toExamQuestion } from "../src/server/exam-repository";
 import { commitImport, previewImport } from "../src/server/test-import";
@@ -88,7 +88,7 @@ Variant ikki,otm,20,,,Umumiy savol!,Y-1,a,b,c,d,B
   check("Xatoli faylni import qilib bo‘lmaydi", !v.canImport);
   check("Yaxshi qator (2) xato sifatida belgilanmagan", !v.errors.some((e) => e.row === 2));
 
-  const noCols = validateImport([["savol", "javob"], ["a", "b"]], opts);
+  const noCols = validateImport([["foo", "bar"], ["a", "b"]], opts);
   check("Xato: majburiy ustunlar yo‘q", noCols.errors.filter((e) => e.code === "missing_column").length === 3 && !noCols.canImport);
   check("Xato: bo‘sh fayl", validateImport([], opts).errors[0]?.code === "file_format");
 
@@ -108,6 +108,40 @@ Variant ikki,otm,20,,,Umumiy savol!,Y-1,a,b,c,d,B
   const publicXlsx = readFileSync(path.join(process.cwd(), "public", "templates", "huquqlab-test-import.xlsx"));
   const pub = validateImport((await readSheet(publicXlsx)) as unknown[][], { ...opts, format: "xlsx" });
   check("public/templates: Excel shablon xatosiz o‘qiladi", pub.canImport && pub.tests[0].questions.length === 2);
+
+
+  // ---- Ustunlarni avtomatik aniqlash (o'zbek / rus / ingliz) va moslashtirish
+  check("Sarlavha: o‘zbekcha", autoMapping(["Test nomi", "Savol", "A", "B", "C", "D", "To‘g‘ri javob", "Izoh", "Vaqt", "Narx"]).join() === "test_title,question_text,option_a,option_b,option_c,option_d,correct_answer,explanation,duration_minutes,price");
+  check("Sarlavha: ruscha", autoMapping(["Вопрос", "Вариант А", "Вариант Б", "Вариант В", "Вариант Г", "Правильный ответ", "Тема"]).join() === "question_text,option_a,option_b,option_c,option_d,correct_answer,topic");
+  check("Sarlavha: inglizcha", autoMapping(["Question", "Answer A", "Answer B", "Answer C", "Answer D", "Correct", "Category", "Duration"]).join() === "question_text,option_a,option_b,option_c,option_d,correct_answer,test_category,duration_minutes");
+  check("Sarlavha: noma’lum ustun e’tiborsiz, takror maydon bir marta", autoMapping(["Savol", "Savol", "xyz"]).join() === "question_text,,");
+  const ru = validateImport(parseCsv("Название теста;Вопрос;Вариант А;Вариант Б;Вариант В;Вариант Г;Ответ\nТест по праву;Что такое закон?;a;b;c;d;B"), { ...opts, defaults: { category: "otm", duration_minutes: 15 } });
+  check("Ruscha fayl + standart kategoriya/vaqt → importga tayyor", ru.canImport && ru.tests[0].category === "otm" && ru.tests[0].duration_minutes === 15 && ru.tests[0].questions[0].options[1].is_correct, ru.errors.map((e) => e.message).join("; "));
+  const noDefaults = validateImport(parseCsv("Test nomi,Savol,A,B,C,D,Javob\nTest bir,Savol,a,b,c,d,A"), opts);
+  check("Kategoriya va vaqt yo‘q, standart ham yo‘q → aniq xato", noDefaults.errors.some((e) => e.code === "invalid_category") && noDefaults.errors.some((e) => e.code === "invalid_duration"));
+  const manual = validateImport(parseCsv("Q,X1,X2,X3,X4,K,N\nSavol matni,a,b,c,d,C,Qo‘lda moslangan"), {
+    ...opts,
+    mapping: { 0: ["question_text", "option_a", "option_b", "option_c", "option_d", "correct_answer", "test_title"] },
+    defaults: { category: "konstitutsiya", duration_minutes: 10 },
+  });
+  check("Qo‘lda moslashtirish ishlaydi", manual.canImport && manual.tests[0].title === "Qo‘lda moslangan" && manual.tests[0].questions[0].options[2].is_correct);
+
+  // ---- Ko'p varaqli fayl: varaq nomi — test nomi, xatolarda varaq ko'rsatiladi
+  const wb = validateWorkbook(
+    [
+      { name: "1-variant", rows: [["Savol", "A", "B", "C", "D", "Javob"], ["Birinchi savol", "a", "b", "c", "d", "A"], ["Ikkinchi savol", "a", "b", "c", "d", "B"]] },
+      { name: "2-variant", rows: [["Savol", "A", "B", "C", "D", "Javob"], ["Uchinchi savol", "a", "b", "c", "d", "X"]] },
+    ],
+    { ...opts, format: "xlsx", defaults: { category: "otm", duration_minutes: 20 } },
+  );
+  check("Ko‘p varaq: varaq nomlari test nomi bo‘ldi", wb.tests.map((t) => t.title).join() === "1-variant,2-variant" && wb.tests[0].questions.length === 2);
+  check("Ko‘p varaq: xatoda varaq va qator ko‘rsatiladi", wb.errors.some((e) => e.sheet === "2-variant" && e.row === 2 && e.code === "invalid_correct"));
+  const xlsxSheets = await writeExcelFile([
+    { sheet: "Konstitutsiya", data: [["Savol", "A", "B", "C", "D", "Javob"].map((value) => ({ value })), ["Varaqdagi savol", "a", "b", "c", "d", "D"].map((value) => ({ value }))] },
+    { sheet: "Nazariya", data: [["Savol", "A", "B", "C", "D", "Javob"].map((value) => ({ value })), ["Ikkinchi varaq savoli", "a", "b", "c", "d", "A"].map((value) => ({ value }))] },
+  ]).toBuffer();
+  const multi = await previewImport(new File([new Uint8Array(xlsxSheets)], "kop-varaq.xlsx"), { defaults: { category: "otm", duration_minutes: 10 } });
+  check("Server: haqiqiy ko‘p varaqli .xlsx o‘qiladi", multi.canImport && multi.tests.map((t) => t.title).join() === "Konstitutsiya,Nazariya", multi.errors.map((e) => e.message).join("; "));
 
   // ---- Bazadagi qator → imtihon formati
   const dbq = toExamQuestion({

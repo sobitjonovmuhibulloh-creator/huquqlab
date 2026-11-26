@@ -93,6 +93,14 @@ Shablonlar: `public/templates/huquqlab-test-import.xlsx` va `.csv` (admin → Im
 
 Test darajasidagi ustunlarni (kategoriya, davomiylik, narx…) testning bitta qatorida yozish yetarli. Boshqa qatorda boshqa qiymat yozilsa, bu xato hisoblanadi.
 
+## 4.1 Moslashtirish (admin → Import)
+
+- **Ustun nomlari** o‘zbek, rus yoki ingliz tilida bo‘lishi mumkin (`Savol` / `Вопрос` / `Question`, `To‘g‘ri javob` / `Правильный ответ` / `Correct` …) — avtomatik aniqlanadi, har bir ustunni qo‘lda ham tanlash mumkin.
+- **Bir nechta varaq** (.xlsx): «Test nomi» ustuni bo‘lmasa, har bir varaq nomi — test nomi.
+- **Standart qiymatlar**: faylda kategoriya, vaqt, narx, premium/bepul, test turi yoki muallif bo‘lmasa — import sozlamalarida tanlanadi.
+- **Xatoli qatorni tahrirlash**: xatolar jadvalidagi «Tahrirlash» → qator maydonlari → «Saqlash va qayta tekshirish» (asl fayl o‘zgarmaydi).
+- **Hisobot**: jami qatorlar, yaroqli/xatoli savollar, takroriylar, testlar soni, importga tayyorligi.
+
 ## 5. Import jarayoni
 
 1. **Fayl** (≤ 5 MB, ≤ 5000 qator) → `POST /api/admin/import` (`action=preview`).

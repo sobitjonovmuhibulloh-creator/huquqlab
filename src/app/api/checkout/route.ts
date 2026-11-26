@@ -1,11 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { productCovers, readAccess, writeAccess } from "@/server/access";
-import { priceForExam } from "@/lib/market";
+import { priceForExam, singlePrice } from "@/lib/market";
 import { getExam } from "@/server/exam-repository";
 import { handle, jsonError, readBody } from "@/server/http";
 import { orderStore } from "@/server/orders";
 import { getPaymentProvider } from "@/server/payments";
-import { getProduct } from "@/server/pricing-store";
+import { getPricing, getProduct } from "@/server/pricing-store";
 
 /**
  * Checkout: buyurtma yaratadi va to'lov sahifasiga yo'naltiradi.
@@ -25,6 +25,8 @@ export const POST = handle(async (request: NextRequest) => {
     const exam = await getExam(String(body.examId));
     if (!exam || exam.access !== "premium" || exam.status !== "available") return jsonError("Sotib olinadigan test topilmadi", 404);
     if (!productCovers(product, exam)) return jsonError("Bu mahsulot tanlangan testga mos emas", 400);
+    // Faqat shu test uchun belgilangan mahsulot (masalan, mock uchun «single-milliy»)
+    if (singlePrice((await getPricing()).products, exam)?.id !== product.id) return jsonError("Bu test uchun boshqa narx belgilangan — sahifani yangilang", 409);
     examId = exam.id;
     amount = priceForExam(product, exam);
   }

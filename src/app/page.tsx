@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { ExamCard } from "@/components/exam/ExamCard";
 import { ExamPreviewVisual } from "@/components/home/ExamPreviewVisual";
+import { PricingTeaser } from "@/components/home/PricingTeaser";
 import { SimulatorPreview } from "@/components/home/SimulatorPreview";
 import { ButtonLink } from "@/components/ui/Button";
 import { documents } from "@/data/documents";
@@ -105,6 +106,15 @@ const steps: { icon: LucideIcon; title: string; text: string }[] = [
   { icon: RotateCcw, title: "Smart Review", text: "Barcha xatolar bir joyda — o‘zlashtirguningizcha mashq." },
 ];
 
+const faqs: [string, string][] = [
+  ["HuquqLab bepulmi?", "Diagnostik test, mavzu darslari va testlari, simulyatorlar, qonunlar katalogi va lug‘at — bepul. Premium testlar alohida sotib olinadi; oylik obuna majburiy emas."],
+  ["Sotib olingan test qancha vaqt ochiq turadi?", "Doimiy. Testni xohlagancha qayta topshirishingiz mumkin — har bir urinish uchun alohida to‘lov yo‘q."],
+  ["Natija rasmiy milliy sertifikat bali bo‘ladimi?", "Yo‘q. Rasmiy ball Rash modeli bilan hisoblanadi. HuquqLab to‘g‘ri javoblar soni, foiz va bo‘limlar bo‘yicha tahlilni ko‘rsatadi — tayyorgarlik darajangizni baholash uchun."],
+  ["Qanday to‘lash mumkin?", "Onlayn to‘lov (Click/Payme) ulanish bosqichida. To‘lov tizimi tasdiqlamaguncha hech qanday test «sotib olingan» deb ochilmaydi."],
+  ["Natijalarim qayerda saqlanadi?", "Hozircha shu brauzerda. Akkaunt tizimi qo‘shilgach, natijalar barcha qurilmalaringizda ko‘rinadi."],
+  ["Savollar qayerdan olinadi?", "Rasmiy spetsifikatsiya (Bilimni baholash agentligi) va amaldagi qonunchilik asosida. Har bir savolga izoh va manba beriladi; lex.uz havolalari tekshirilgan."],
+];
+
 export default function HomePage() {
   const featured = exams.filter((e) => e.status === "available");
   const wallet = scenarios[0];
@@ -115,10 +125,10 @@ export default function HomePage() {
       <section className="relative overflow-hidden">
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
         <div className="pointer-events-none absolute -top-40 left-1/2 h-[28rem] w-[60rem] -translate-x-1/2 rounded-full bg-brand-500/10 blur-3xl" />
-        <div className="container-page relative grid items-center gap-14 pt-12 pb-16 sm:pt-20 lg:grid-cols-[1.05fr_1fr] lg:pb-24">
+        <div className="container-page relative grid items-center gap-12 pt-10 pb-14 sm:pt-14 lg:grid-cols-[1.05fr_1fr] lg:pb-16">
           <div>
             <p className="eyebrow animate-fade-up">Huquq fanidan imtihonga tayyorgarlik platformasi</p>
-            <h1 className="mt-6 text-[2.6rem] leading-[1.05] font-extrabold text-navy-900 animate-fade-up [animation-delay:60ms] sm:text-6xl dark:text-white">
+            <h1 className="mt-5 text-4xl leading-[1.1] font-extrabold text-navy-900 animate-fade-up [animation-delay:60ms] sm:text-5xl dark:text-white">
               Huquqni bil. <span className="text-brand-700 dark:text-brand-400">Imtihonga ishonch bilan tayyorlan.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-navy-600 animate-fade-up [animation-delay:120ms] dark:text-navy-300">
@@ -160,7 +170,7 @@ export default function HomePage() {
       </section>
 
       {/* IMKONIYATLAR */}
-      <section className="container-page mt-24">
+      <section className="container-page mt-20">
         <SectionTitle eyebrow="Imkoniyatlar" title="Imtihonga tayyorgarlikning barcha bosqichi bir joyda" />
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {capabilities.map((c) => (
@@ -179,7 +189,7 @@ export default function HomePage() {
       </section>
 
       {/* QANDAY ISHLAYDI */}
-      <section className="mt-24 border-y border-navy-200/70 bg-white/60 py-16 dark:border-white/[0.06] dark:bg-white/[0.02]">
+      <section className="mt-20 border-y border-navy-200/70 bg-white/60 py-16 dark:border-white/[0.06] dark:bg-white/[0.02]">
         <div className="container-page">
           <SectionTitle eyebrow="Qanday ishlaydi" title="Bilimni o‘lchang, xatoni toping, mustahkamlang" />
           <ol className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -198,7 +208,7 @@ export default function HomePage() {
       </section>
 
       {/* TESTLAR */}
-      <section className="container-page mt-24">
+      <section className="container-page mt-20">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <SectionTitle eyebrow="Test Market" title="Tayyor testlar" />
           <ButtonLink href="/testlar" variant="secondary">
@@ -212,8 +222,19 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* NARXLAR — admin paneldagi joriy narxlar */}
+      <section className="container-page mt-20">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <SectionTitle eyebrow="Narxlar" title="Obunasiz, faqat kerakli testga to‘laysiz" />
+          <p className="max-w-sm text-sm text-navy-500 dark:text-navy-400">Sotib olingan test doimiy ochiq qoladi, cheksiz qayta topshirish mumkin. Paketlar — chegirmali.</p>
+        </div>
+        <div className="mt-8">
+          <PricingTeaser />
+        </div>
+      </section>
+
       {/* KIMLAR UCHUN */}
-      <section className="container-page mt-24">
+      <section className="container-page mt-20">
         <SectionTitle eyebrow="Kimlar uchun" title="Har bir foydalanuvchi uchun o‘z yo‘li" />
         <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
           {personas.map((p) => (
@@ -238,7 +259,7 @@ export default function HomePage() {
       </section>
 
       {/* O'RGANISH */}
-      <section className="container-page mt-24 grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
+      <section className="container-page mt-20 grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
         <div>
           <SectionTitle eyebrow="O‘rganish" title="Testdan oldin — tushunib oling" />
           <p className="mt-4 max-w-lg text-navy-600 dark:text-navy-300">
@@ -261,8 +282,27 @@ export default function HomePage() {
         <SimulatorPreview scenario={wallet} />
       </section>
 
+
+      {/* FAQ — faqat haqiqiy holat */}
+      <section className="container-page mt-20" aria-labelledby="faq">
+        <SectionTitle eyebrow="Savollar" title="Ko‘p beriladigan savollar" />
+        <div className="mt-8 grid gap-3 md:grid-cols-2">
+          {faqs.map(([q, a]) => (
+            <details key={q} className="card group p-5 open:shadow-md">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold text-navy-900 dark:text-white">
+                {q}
+                <span className="text-navy-400 transition group-open:rotate-45" aria-hidden>
+                  +
+                </span>
+              </summary>
+              <p className="mt-3 text-sm leading-relaxed text-navy-600 dark:text-navy-300">{a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="container-page mt-24">
+      <section className="container-page mt-20">
         <div className="relative overflow-hidden rounded-3xl bg-navy-900 px-6 py-12 text-center text-white sm:px-12 dark:bg-navy-800/60 dark:ring-1 dark:ring-white/10">
           <div className="bg-grid pointer-events-none absolute inset-0 opacity-10" />
           <h2 className="relative text-3xl font-extrabold sm:text-4xl">Qaysi bo‘limlarni takrorlash kerak?</h2>
@@ -282,7 +322,7 @@ function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div>
       <p className="eyebrow">{eyebrow}</p>
-      <h2 className="mt-4 max-w-2xl text-3xl font-extrabold text-navy-900 sm:text-4xl dark:text-white">{title}</h2>
+      <h2 className="mt-3 max-w-2xl text-2xl font-extrabold text-navy-900 sm:text-3xl dark:text-white">{title}</h2>
     </div>
   );
 }

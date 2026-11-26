@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AlertCircle, ArrowRight, Coins, History, Info, Receipt } from "lucide-react";
+import { Activity, AlertCircle, ArrowRight, Coins, History, Info, Receipt, Target, TrendingUp, Trophy } from "lucide-react";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { EmptyState, Skeleton } from "@/components/ui/misc";
 import { formatPrice } from "@/config/pricing";
-import { loadResults, percent } from "@/lib/exam-client";
+import { learnerStats, loadResults, percent } from "@/lib/exam-client";
 import { formatDate } from "@/lib/utils";
 import type { ExamResult } from "@/types/exam";
+import { RecommendedTests } from "./RecommendedTests";
 import { useMarket } from "./useMarket";
 
 export function MyTests() {
@@ -27,11 +28,64 @@ export function MyTests() {
       />
     );
 
+  const stats = learnerStats(results);
   const owned = catalog.filter((e) => e.access === "premium" && access.exams.includes(e.id));
   const productTitle = (id: string) => pricing?.products.find((p) => p.id === id)?.title ?? id;
   const credits = Object.entries(access.credits).filter(([, n]) => n > 0);
 
   return (
+    <div className="space-y-10">
+    {stats ? (
+      <section aria-label="Statistika" className="grid gap-4 lg:grid-cols-[1fr_340px]">
+        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {(
+            [
+              [TrendingUp, "O‘rtacha natija", `${stats.averagePct}%`],
+              [Trophy, "Eng yaxshi natija", `${stats.bestPct}%`],
+              [History, "Urinishlar", `${stats.attempts} ta · ${stats.testsTaken} test`],
+              [Activity, "So‘nggi 7 kunda", `${stats.last7Days} ta urinish`],
+            ] as const
+          ).map(([Icon, k, v]) => (
+            <div key={k} className="card p-4">
+              <dt className="flex items-center gap-1.5 text-xs text-navy-500 dark:text-navy-400">
+                <Icon className="h-3.5 w-3.5" /> {k}
+              </dt>
+              <dd className="mt-1 font-display text-xl font-extrabold text-navy-900 dark:text-white">{v}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className="card p-4">
+          <p className="flex items-center gap-1.5 text-sm font-semibold text-navy-900 dark:text-white">
+            <Target className="h-4 w-4" /> Zaif bo‘limlar
+          </p>
+          {stats.weak.length === 0 ? (
+            <p className="mt-2 text-sm text-navy-500 dark:text-navy-400">Hozircha 70% dan past bo‘lim yo‘q.</p>
+          ) : (
+            <ul className="mt-2 space-y-1.5 text-sm">
+              {stats.weak.map((w) => (
+                <li key={w.label} className="flex justify-between gap-3">
+                  <span className="truncate text-navy-700 dark:text-navy-300">{w.label}</span>
+                  <span className="shrink-0 font-semibold tabular-nums text-rose-700 dark:text-rose-300">{w.pct}%</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          <Link href="/testlar/xatolar" className="mt-3 inline-block text-sm font-semibold text-brand-700 hover:underline dark:text-brand-300">
+            Xatolar ustida ishlash →
+          </Link>
+        </div>
+      </section>
+    ) : (
+      <section className="card flex flex-col items-start gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="font-display text-lg font-bold text-navy-900 dark:text-white">Statistika birinchi testdan keyin paydo bo‘ladi</p>
+          <p className="text-sm text-navy-500 dark:text-navy-400">O‘rtacha natija, zaif bo‘limlar va faollik — faqat haqiqiy natijalaringiz asosida.</p>
+        </div>
+        <Link href="/testlar/diagnostika" className="inline-flex h-11 shrink-0 items-center rounded-xl bg-brand-700 px-5 text-sm font-semibold text-white hover:bg-brand-800 dark:bg-brand-400 dark:text-navy-950">
+          Bepul diagnostik test
+        </Link>
+      </section>
+    )}
     <div className="grid gap-10 lg:grid-cols-[1fr_340px]">
       <div className="space-y-10">
         <section>
@@ -152,6 +206,8 @@ export function MyTests() {
           Xaridlar va natijalar hozircha shu brauzerga bog‘langan. Akkaunt tizimi qo‘shilgach, ular barcha qurilmalaringizda ko‘rinadi.
         </p>
       </aside>
+    </div>
+    <RecommendedTests title="Siz uchun tavsiya" />
     </div>
   );
 }

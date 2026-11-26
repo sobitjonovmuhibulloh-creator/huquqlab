@@ -37,7 +37,70 @@ export const KNOWN_COLUMNS = [
   "exam_type",
   "grade_or_audience",
 ] as const;
-type Column = (typeof KNOWN_COLUMNS)[number];
+export type Column = (typeof KNOWN_COLUMNS)[number];
+
+/** Sarlavha sinonimlari (o'zbek / rus / ingliz). Avtomatik moslashtirish uchun; normalizeAnswer + «_» ko'rinishida solishtiriladi */
+export const HEADER_ALIASES: Record<Column, string[]> = {
+  test_title: ["test", "test nomi", "testning nomi", "variant", "название теста", "тест", "вариант", "test name", "title"],
+  test_author: ["muallif", "автор", "author"],
+  test_category: ["kategoriya", "toifa", "bo‘lim", "категория", "раздел", "category"],
+  test_description: ["tavsif", "описание", "description"],
+  duration_minutes: ["vaqt", "davomiylik", "daqiqa", "время", "длительность", "минуты", "duration", "time", "minutes"],
+  price: ["narx", "narxi", "цена", "стоимость", "price", "cost"],
+  is_premium: ["premium", "pullik", "платный", "премиум", "paid"],
+  question_text: ["savol", "savol matni", "вопрос", "текст вопроса", "question", "text"],
+  question_type: ["savol turi", "tur", "тип", "тип вопроса", "type"],
+  option_a: ["a", "a variant", "variant a", "javob a", "вариант a", "ответ a", "answer a", "а", "вариант а", "ответ а"],
+  option_b: ["b", "b variant", "variant b", "javob b", "вариант b", "ответ b", "answer b", "б", "вариант б", "ответ б"],
+  option_c: ["c", "c variant", "variant c", "javob c", "вариант c", "ответ c", "answer c", "с", "вариант в", "ответ в"],
+  option_d: ["d", "d variant", "variant d", "javob d", "вариант d", "ответ d", "answer d", "д", "вариант г", "ответ г"],
+  correct_answer: ["to‘g‘ri javob", "javob", "kalit", "to‘g‘ri", "правильный ответ", "ответ", "ключ", "answer", "correct", "key"],
+  explanation: ["izoh", "tushuntirish", "пояснение", "объяснение", "комментарий", "explanation", "comment"],
+  topic: ["mavzu", "тема", "topic"],
+  difficulty: ["qiyinlik", "daraja", "сложность", "уровень", "difficulty", "level"],
+  source_title: ["manba", "источник", "source"],
+  source_url: ["havola", "link", "ссылка", "url"],
+  legal_article: ["modda", "статья", "article"],
+  exam_type: ["test turi", "тип теста"],
+  grade_or_audience: ["auditoriya", "sinf", "kim uchun", "аудитория", "класс", "audience", "grade"],
+};
+
+const headerKey = (h: unknown) => normalizeAnswer(cellText(h)).replace(/\s+/g, "_");
+
+/** Sarlavha qatoridan ustunlarni avtomatik aniqlash: aniq nom → sinonim; har bir maydon faqat bir marta */
+export function autoMapping(headerRow: unknown[]): (Column | "")[] {
+  const used = new Set<Column>();
+  return headerRow.map((h) => {
+    const k = headerKey(h);
+    if (!k) return "";
+    const exact = (KNOWN_COLUMNS as readonly string[]).includes(k) ? (k as Column) : undefined;
+    const found = exact ?? (Object.keys(HEADER_ALIASES) as Column[]).find((c) => HEADER_ALIASES[c].some((a) => headerKey(a) === k));
+    if (!found || used.has(found)) return "";
+    used.add(found);
+    return found;
+  });
+}
+
+/** Birinchi bo'sh bo'lmagan qator — sarlavha */
+export function headerRowIndex(rows: unknown[][]) {
+  return rows.findIndex((r) => r.some((c) => cellText(c)));
+}
+
+export interface ImportSheet {
+  name: string;
+  rows: unknown[][];
+}
+
+/** Faylda bo'lmagan test maydonlari uchun admin tanlaydigan standart qiymatlar */
+export interface ImportDefaults {
+  category?: ExamCategory;
+  duration_minutes?: number;
+  is_premium?: boolean;
+  /** null — standart narx */
+  price?: number | null;
+  exam_type?: ImportTest["exam_type"];
+  author?: string;
+}
 
 export type IssueCode =
   | "file_format"
@@ -67,6 +130,8 @@ export type IssueCode =
 export interface ImportIssue {
   /** Fayldagi qator raqami; null — butun faylga oid */
   row: number | null;
+  /** Excel varag'i (bir nechta varaqli faylda) */
+  sheet?: string;
   column?: string;
   code: IssueCode;
   message: string;
@@ -80,6 +145,7 @@ export interface ImportOption {
 
 export interface ImportQuestion {
   row: number;
+  sheet?: string;
   question_text: string;
   question_type: QuestionKind;
   topic: string | null;
@@ -241,9 +307,18 @@ export interface ValidateOptions {
   existingTitles: Set<string>;
   /** Bazadagi va kod ichidagi savollar: normalized_text → qaysi testda */
   existingQuestions: Map<string, string>;
+  /** Varaq indeksi → har bir ustun uchun maydon ("" — e'tiborsiz). Berilmasa — avtomatik */
+  mapping?: Record<number, (Column | "")[]>;
+  defaults?: ImportDefaults;
+  /** test_title ustuni bo'lmasa, varaq nomini test nomi sifatida olish (standart: ha) */
+  sheetAsTitle?: boolean;
 }
 
 export function validateImport(matrix: unknown[][], opts: ValidateOptions): ImportPreview {
+  return validateWorkbook([{ name: "", rows: matrix }], opts);
+}
+
+export function validateWorkbook(sheets: ImportSheet[], opts: ValidateOptions): ImportPreview {
   const errors: ImportIssue[] = [];
   const warnings: ImportIssue[] = [];
   const result = (tests: ImportTest[], totalRows: number): ImportPreview => ({
@@ -256,35 +331,47 @@ export function validateImport(matrix: unknown[][], opts: ValidateOptions): Impo
     canImport: errors.length === 0 && tests.length > 0,
   });
 
-  const headerIdx = matrix.findIndex((r) => r.some((c) => cellText(c)));
-  if (headerIdx < 0) {
-    errors.push({ row: null, code: "file_format", message: "Fayl bo‘sh: sarlavha qatori topilmadi." });
-    return result([], 0);
-  }
-  const header = matrix[headerIdx].map((c) => normalizeAnswer(cellText(c)).replace(/\s+/g, "_"));
-  const col = new Map<Column, number>();
-  header.forEach((h, i) => {
-    if ((KNOWN_COLUMNS as readonly string[]).includes(h)) {
-      if (!col.has(h as Column)) col.set(h as Column, i);
-    } else if (h) warnings.push({ row: headerIdx + 1, column: h, code: "unknown_column", message: `Noma’lum ustun e’tiborsiz qoldirildi: «${h}»` });
-  });
-  for (const c of REQUIRED_COLUMNS) {
-    if (!col.has(c)) errors.push({ row: headerIdx + 1, column: c, code: "missing_column", message: `Majburiy ustun yo‘q: «${c}»` });
-  }
-  if (errors.length) return result([], 0);
-
-  const dataRows = matrix.slice(headerIdx + 1);
-  if (dataRows.length > MAX_ROWS) {
-    errors.push({ row: null, code: "too_many_rows", message: `Faylda ${dataRows.length} qator bor — bir martada ko‘pi bilan ${MAX_ROWS} ta.` });
-    return result([], dataRows.length);
-  }
-
   const tests = new Map<string, ImportTest>();
   /** Test darajasidagi qiymatlar qayerdan olinganini eslab qolamiz (ziddiyat xabari uchun) */
   const testFieldRow = new Map<string, Record<string, { value: string; row: number }>>();
   /** normalized_text → test kaliti → birinchi qator (bir test ichidagi takror — xato, testlararo — ogohlantirish) */
   const seenInFile = new Map<string, { row: number; title: string; key: string }[]>();
   let totalRows = 0;
+  if (!sheets.some((sh) => headerRowIndex(sh.rows) >= 0)) {
+    errors.push({ row: null, code: "file_format", message: "Fayl bo‘sh: sarlavha qatori topilmadi." });
+    return result([], 0);
+  }
+  const rowCount = sheets.reduce((n, sh) => n + Math.max(0, sh.rows.length - headerRowIndex(sh.rows) - 1), 0);
+  if (rowCount > MAX_ROWS) {
+    errors.push({ row: null, code: "too_many_rows", message: `Faylda ${rowCount} qator bor — bir martada ko‘pi bilan ${MAX_ROWS} ta.` });
+    return result([], rowCount);
+  }
+
+  sheets.forEach((sheet, si) => {
+  const sheetName = sheet.name.trim();
+  const matrix = sheet.rows;
+  const errStart = errors.length;
+  const warnStart = warnings.length;
+  const headerIdx = headerRowIndex(matrix);
+  if (headerIdx < 0) return;
+  const mapping = opts.mapping?.[si] ?? autoMapping(matrix[headerIdx]);
+  const col = new Map<Column, number>();
+  matrix[headerIdx].forEach((h, i) => {
+    const m = mapping[i];
+    if (m) {
+      if (!col.has(m)) col.set(m, i);
+    } else if (cellText(h)) warnings.push({ row: headerIdx + 1, column: cellText(h), code: "unknown_column", message: `Ustun e’tiborsiz qoldirildi: «${cellText(h)}»` });
+  });
+  const titleFromSheet = !col.has("test_title") && (opts.sheetAsTitle ?? true) && sheetName.length >= 3;
+  for (const c of REQUIRED_COLUMNS) {
+    if (col.has(c) || (c === "test_title" && titleFromSheet)) continue;
+    errors.push({ row: headerIdx + 1, column: c, code: "missing_column", message: `Majburiy ustun yo‘q: «${c}» — ustunlarni moslashtiring` });
+  }
+  if (errors.length > errStart) {
+    for (const e of errors.slice(errStart)) e.sheet = sheetName || undefined;
+    return;
+  }
+  const dataRows = matrix.slice(headerIdx + 1);
 
   dataRows.forEach((raw, i) => {
     const row = headerIdx + 2 + i;
@@ -296,7 +383,7 @@ export function validateImport(matrix: unknown[][], opts: ValidateOptions): Impo
     totalRows++;
     const err = (code: IssueCode, message: string, column?: string) => errors.push({ row, column, code, message });
 
-    const title = get("test_title");
+    const title = titleFromSheet ? sheetName : get("test_title");
     if (!title) return err("missing_title", "Test nomi (test_title) ko‘rsatilmagan", "test_title");
     if (title.length < 3 || title.length > 200) return err("missing_title", "Test nomi 3–200 belgi bo‘lishi kerak", "test_title");
     const titleKey = normalizeAnswer(title);
@@ -379,6 +466,7 @@ export function validateImport(matrix: unknown[][], opts: ValidateOptions): Impo
 
     tests.get(titleKey)!.questions.push({
       row,
+      sheet: sheetName || undefined,
       question_text: text,
       question_type: type,
       topic: get("topic") || null,
@@ -391,41 +479,50 @@ export function validateImport(matrix: unknown[][], opts: ValidateOptions): Impo
       options,
     });
   });
+  for (const e of errors.slice(errStart)) e.sheet ??= sheetName || undefined;
+  for (const w of warnings.slice(warnStart)) w.sheet ??= sheetName || undefined;
+  });
 
   // --- Test darajasidagi maydonlarni yakunlash
   for (const [key, t] of tests) {
     const f = testFieldRow.get(key) ?? {};
     const at = (c: string) => f[c]?.row ?? t.firstRow;
 
+    const d = opts.defaults ?? {};
+    const sheetOf = t.questions[0]?.sheet;
+    const push = (issue: ImportIssue) => errors.push({ ...issue, sheet: issue.sheet ?? sheetOf });
+
+    // Fayldagi qiymat ustun; bo'lmasa — admin tanlagan standart qiymat
     const cat = f.test_category?.value;
-    const category = cat ? CATEGORY_ALIASES[normalizeAnswer(cat)] : undefined;
+    const category = cat ? CATEGORY_ALIASES[normalizeAnswer(cat)] : d.category;
     if (!category)
-      errors.push({
+      push({
         row: at("test_category"),
         column: "test_category",
         code: "invalid_category",
-        message: cat ? `Noma’lum kategoriya: «${cat}». Mumkin: ${Object.keys(examCategoryLabel).join(", ")}` : `«${t.title}» uchun test_category ko‘rsatilmagan`,
+        message: cat ? `Noma’lum kategoriya: «${cat}». Mumkin: ${Object.keys(examCategoryLabel).join(", ")}` : `«${t.title}» uchun kategoriya ko‘rsatilmagan — faylga qo‘shing yoki import sozlamalarida tanlang`,
       });
     else t.category = category;
 
     t.description = f.test_description?.value ?? "";
-    t.author = (f.test_author?.value ?? "").slice(0, 120);
+    t.author = (f.test_author?.value ?? d.author ?? "").slice(0, 120);
 
     const dur = f.duration_minutes?.value;
-    const duration = dur ? parseInteger(dur) : null;
+    const duration = dur ? parseInteger(dur) : d.duration_minutes ?? null;
     if (!duration || duration < 1 || duration > 300)
-      errors.push({ row: at("duration_minutes"), column: "duration_minutes", code: "invalid_duration", message: dur ? `Davomiylik 1–300 daqiqa oralig‘idagi butun son bo‘lishi kerak: «${dur}»` : `«${t.title}» uchun duration_minutes ko‘rsatilmagan` });
+      push({ row: at("duration_minutes"), column: "duration_minutes", code: "invalid_duration", message: dur ? `Davomiylik 1–300 daqiqa oralig‘idagi butun son bo‘lishi kerak: «${dur}»` : `«${t.title}» uchun davomiylik ko‘rsatilmagan — faylga qo‘shing yoki import sozlamalarida kiriting` });
     else t.duration_minutes = duration;
 
     const priceRaw = f.price?.value;
-    const price = priceRaw ? parseInteger(priceRaw) : null;
+    const price = priceRaw ? parseInteger(priceRaw) : d.price ?? null;
     if (priceRaw && (price === null || price > 10_000_000))
-      errors.push({ row: at("price"), column: "price", code: "invalid_price", message: `Narx 0 – 10 000 000 so‘m oralig‘idagi butun son bo‘lishi kerak: «${priceRaw}»` });
+      push({ row: at("price"), column: "price", code: "invalid_price", message: `Narx 0 – 10 000 000 so‘m oralig‘idagi butun son bo‘lishi kerak: «${priceRaw}»` });
 
     const premRaw = f.is_premium?.value;
-    const prem = premRaw ? parseBool(premRaw) : null;
-    if (premRaw && prem === null) errors.push({ row: at("is_premium"), column: "is_premium", code: "invalid_bool", message: `is_premium: «${premRaw}» — ha/yo‘q, true/false yoki 1/0 bo‘lishi kerak` });
+    const prem = premRaw ? parseBool(premRaw) : d.is_premium ?? null;
+    if (premRaw && prem === null) push({ row: at("is_premium"), column: "is_premium", code: "invalid_bool", message: `is_premium: «${premRaw}» — ha/yo‘q, true/false yoki 1/0 bo‘lishi kerak` });
     t.is_premium = prem ?? (price ?? 1) > 0;
+    if (!f.exam_type && d.exam_type) t.exam_type = d.exam_type;
     if (!t.is_premium && price) errors.push({ row: at("price"), column: "price", code: "invalid_price", message: "Bepul (is_premium = yo‘q) testga narx qo‘yib bo‘lmaydi" });
     if (t.is_premium && price !== null && price > 0 && price < 1000) errors.push({ row: at("price"), column: "price", code: "invalid_price", message: "Premium test narxi kamida 1 000 so‘m" });
     t.price = t.is_premium ? (price || null) : 0;
@@ -442,7 +539,9 @@ export function validateImport(matrix: unknown[][], opts: ValidateOptions): Impo
     if (t.questions.length === 0) errors.push({ row: t.firstRow, code: "no_questions", message: `«${t.title}» testida yaroqli savol yo‘q` });
   }
 
-  errors.sort((a, b) => (a.row ?? 0) - (b.row ?? 0));
+  // Varaqlar tartibida, keyin qator bo'yicha
+  const order = new Map(sheets.map((sh, i) => [sh.name.trim() || undefined, i]));
+  errors.sort((a, b) => (order.get(a.sheet) ?? 0) - (order.get(b.sheet) ?? 0) || (a.row ?? 0) - (b.row ?? 0));
   return result([...tests.values()], totalRows);
 }
 
