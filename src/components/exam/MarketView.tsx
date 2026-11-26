@@ -15,6 +15,8 @@ import { ExamCard, type ExamOwnership } from "./ExamCard";
 import { useMarket } from "./useMarket";
 
 type AccessFilter = "all" | "free" | "premium" | "owned";
+/** HuquqLab tahririyati yozgan testlar (kod ichida) va admin yuklagan to'plamlar (bazada) */
+type SourceFilter = "all" | "huquqlab" | "imported";
 
 const PAGE = 12;
 
@@ -27,6 +29,7 @@ export function MarketView() {
   const [accessFilter, setAccessFilter] = useState<AccessFilter>("all");
   const [audience, setAudience] = useState<Audience | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
+  const [source, setSource] = useState<SourceFilter>("all");
   const [query, setQuery] = useState("");
   const [limit, setLimit] = useState(PAGE);
   const deferredQuery = useDeferredValue(query);
@@ -39,6 +42,7 @@ export function MarketView() {
         .filter((e) => !category || e.category === category)
         .filter((e) => !audience || e.audience.includes(audience))
         .filter((e) => !difficulty || e.difficulty === difficulty)
+        .filter((e) => source === "all" || (source === "imported") === (e.source === "db"))
         .filter((e) => {
           const q = normalizeSearch(deferredQuery.trim());
           return !q || normalizeSearch(`${e.title} ${e.description} ${e.author}`).includes(q);
@@ -51,7 +55,7 @@ export function MarketView() {
         })
         // Tayyor testlar oldinda
         .sort((a, b) => Number(a.status === "coming_soon") - Number(b.status === "coming_soon")),
-    [catalog, category, audience, difficulty, deferredQuery, accessFilter, access],
+    [catalog, category, audience, difficulty, source, deferredQuery, accessFilter, access],
   );
 
   const bundles = pricing?.products.filter((p) => p.kind === "bundle") ?? [];
@@ -101,6 +105,28 @@ export function MarketView() {
                 <X className="h-4 w-4" />
               </button>
             )}
+          </div>
+          <div className="card inline-flex flex-wrap gap-1 p-1" role="tablist" aria-label="Manba">
+            {(
+              [
+                ["all", "Barcha testlar", catalog.length],
+                ["huquqlab", "HuquqLab testlari", catalog.filter((e) => e.source !== "db").length],
+                ["imported", "Yuklangan to‘plamlar", catalog.filter((e) => e.source === "db").length],
+              ] as const
+            ).map(([v, label, n]) => (
+              <button
+                key={v}
+                role="tab"
+                aria-selected={source === v}
+                onClick={() => (setSource(v), setLimit(PAGE))}
+                className={cn(
+                  "rounded-xl px-3.5 py-2 text-sm font-semibold transition",
+                  source === v ? "bg-navy-900 text-white dark:bg-white dark:text-navy-950" : "text-navy-600 hover:bg-navy-100 dark:text-navy-300 dark:hover:bg-white/5",
+                )}
+              >
+                {label} <span className="opacity-60">· {n}</span>
+              </button>
+            ))}
           </div>
           <div className="flex flex-wrap gap-2" role="group" aria-label="Kategoriya">
             <Chip active={!category} onClick={() => setCategory(null)}>
@@ -179,7 +205,7 @@ export function MarketView() {
               title="Mos test topilmadi"
               description="Filtrlarni o‘zgartirib ko‘ring."
               action={
-                <Button variant="secondary" onClick={() => (setCategory(null), setAudience(null), setDifficulty(null), setQuery(""), setAccessFilter("all"))}>
+                <Button variant="secondary" onClick={() => (setCategory(null), setAudience(null), setDifficulty(null), setSource("all"), setQuery(""), setAccessFilter("all"))}>
                   Filtrlarni tozalash
                 </Button>
               }

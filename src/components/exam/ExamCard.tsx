@@ -15,7 +15,18 @@ export function ExamCard({ exam, ownership, price, index = 0 }: { exam: ExamMeta
       className={cn("card group relative flex flex-col p-5 transition duration-200 animate-fade-up", soon ? "opacity-80" : "hover:-translate-y-0.5 hover:shadow-lg")}
     >
       <div className="flex items-start justify-between gap-3">
-        <span className="text-xs font-semibold tracking-wide text-navy-500 uppercase dark:text-navy-400">{examCategoryLabel[exam.category]}</span>
+        <span className="flex flex-wrap items-center gap-1.5 text-xs font-semibold tracking-wide text-navy-500 uppercase dark:text-navy-400">
+          {examCategoryLabel[exam.category]}
+          <span
+            className={cn(
+              "rounded-md px-1.5 py-0.5 text-[10px] tracking-normal normal-case",
+              exam.source === "db" ? "bg-violet-50 text-violet-700 dark:bg-violet-400/10 dark:text-violet-300" : "bg-brand-50 text-brand-700 dark:bg-brand-400/10 dark:text-brand-300",
+            )}
+            title={exam.source === "db" ? "Admin yuklagan to‘plamdan" : "HuquqLab tahririyati tayyorlagan"}
+          >
+            {exam.source === "db" ? "To‘plam" : "HuquqLab"}
+          </span>
+        </span>
         <AccessBadge exam={exam} ownership={ownership} />
       </div>
 

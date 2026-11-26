@@ -78,6 +78,11 @@ export function TestsManager() {
         <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Test nomi bo‘yicha qidirish" className="input pl-10" aria-label="Testlarni qidirish" />
       </div>
 
+      {data.dbConfigured && (
+        <h3 className="font-bold">
+          Yuklangan baza <span className="text-sm font-normal text-navy-500">· import qilingan to‘plamlar ({data.dbTests.length} ta test, {data.dbTests.reduce((n, t) => n + t.question_count, 0)} ta savol)</span>
+        </h3>
+      )}
       {data.dbConfigured &&
         (dbTests.length === 0 ? (
           <EmptyState title="Bazada test yo‘q" description="«Import» bo‘limi orqali Excel yoki CSV fayldan testlar yuklang." />
@@ -149,7 +154,7 @@ export function TestsManager() {
 
       <section>
         <h3 className="flex items-center gap-2 font-bold">
-          <Lock className="h-4 w-4" /> Kod ichidagi testlar <span className="text-sm font-normal text-navy-500">· faqat o‘qish (src/server/questions)</span>
+          <Lock className="h-4 w-4" /> HuquqLab yaratgan testlar <span className="text-sm font-normal text-navy-500">· tahririyat savollari, kod ichida (src/server/questions) · faqat o‘qish</span>
         </h3>
         <ul className="mt-3 grid gap-2 sm:grid-cols-2">
           {data.staticTests
